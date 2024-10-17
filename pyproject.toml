@@ -1,0 +1,216 @@
+[tool.poetry]
+name = "scope-project"
+version = "0.1.0"
+description = "This project generate reports from filters created in a dashboard"
+authors = ["Eros Jeanpierre Bazan Calderon <erosbazan@multiplica.com>"]
+maintainers = ["Eros Jeanpierre Bazan Calderon <erosbazan@multiplica.com>"]
+license = "Vitapro"
+readme = "README.md"
+homepage = "https://github.com/VitaproBI/"
+repository = "https://github.com/VitaproBI/"
+documentation = "https://github.com/VitaproBI/"
+keywords = [
+    "python",
+    "poetry",
+    "scope",
+    "dashboard",
+    "report",
+]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+isort = "^5.13.2"
+black = "^24.10.0"
+ruff = "^0.6.9"
+mypy = "^1.11.2"
+pre-commit = "^4.0.1"
+pandas = "^2.2.3"
+openpyxl = "^3.1.5"
+pydantic = "^2.9.2"
+pydantic-settings = "^2.5.2"
+python-dotenv = "^1.0.1"
+dash = "^2.18.1"
+dash-bootstrap-components = "^1.6.0"
+justpy = "^0.14.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.urls]
+"Scope project" = "https://github.com/VitaproBI/"
+
+[tool.isort]
+py_version = 312
+skip_glob = ["cache/*", ".ruff_cache/*", ".mypy_cache/*", "logs/*"]
+skip_gitignore = true
+line_length = 80
+multi_line_output = 3
+use_parentheses = true
+atomic = true
+include_trailing_comma = true
+force_grid_wrap = 0
+case_sensitive = true
+ensure_newline_before_comments = true
+profile = "black"
+remove_redundant_aliases = true
+color_output = true
+
+[tool.black]
+line-length = 80
+target-version = ["py312"]
+exclude = '''
+(
+    /(\.venv
+  | \.mypy_cache
+  | \.ruff_cache
+  | cache
+  | venv
+  | tests)/
+)
+'''
+skip-string-normalization = true
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    "cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+line-length = 80
+indent-width = 4
+target-version = "py312"
+fix = true
+output-format = "grouped"
+show-fixes = true
+
+[tool.ruff.lint]
+select = [
+    "E", # pycodestyle errors
+    "W", # pycodestyle warnings
+    "F", # pyflakes
+    "I", # isort
+    "C4", # flake8-comprehensions
+]
+ignore = [
+    "E501", # line too long, handled by black
+    "B008", # do not perform function calls in argument defaults
+]
+fixable = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "I",
+    "N",
+    "Q",
+    "S",
+    "T",
+    "W",
+    "ANN",
+    "ARG",
+    "BLE",
+    "COM",
+    "DJ",
+    "DTZ",
+    "EM",
+    "ERA",
+    "EXE",
+    "FBT",
+    "ICN",
+    "INP",
+    "ISC",
+    "NPY",
+    "PD",
+    "PGH",
+    "PIE",
+    "PL",
+    "PT",
+    "PTH",
+    "PYI",
+    "RET",
+    "RSE",
+    "RUF",
+    "SIM",
+    "SLF",
+    "TCH",
+    "TID",
+    "TRY",
+    "UP",
+    "YTT",
+]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "auto"
+docstring-code-format = true
+docstring-code-line-length = 80
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"  # google, numpy
+ignore-decorators = ["typing.overload"]
+
+[tool.ruff.lint.pylint]
+allow-dunder-method-names = ["__tablename__", "__table_args__"]  # PLW3201
+
+[tool.ruff.lint.pyupgrade]
+# Preserve types, even if a file imports `from __future__ import annotations`.
+keep-runtime-typing = true
+
+[tool.mypy]
+exclude = ".venv|venv|tests|cache|.mypy_cache|.ruff_cache"
+ignore_missing_imports = true
+follow_imports = "silent"
+python_version = "3.12"
+disallow_any_generics = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+strict_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+implicit_reexport = false
+strict_equality = true
+strict = true
+show_error_context = true
+show_error_codes = true
+pretty = true
+show_traceback = true
+raise_exceptions = true
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+tests = ["B201", "B301"]
+skips = ["B101", "B601"]

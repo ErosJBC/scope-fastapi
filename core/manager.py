@@ -12,7 +12,6 @@ from pydantic import BaseModel
 from config.base_settings import BaseDataSettings
 from core.decorators import benchmark
 from schemas.validator import validate_dataframe
-from schemas.demand import Demand
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -50,32 +49,18 @@ def load_file(
             *args,
             **kwargs,
         )
-        dataframe = dataframe.where(pd.notnull(dataframe), None)
         logger.info(f"File {settings.FILENAME.stem} loaded successfully.")
-        # TODO: Handle the data validation process for each schema.
-        # If model is Demand, use the dynamic validation
-        if model == Demand:
-            validate_dataframe(dataframe, model, dynamic=True)
-        else:
-            # Validate the dataframe using the specified static model schema
-            validate_dataframe(dataframe, model)
+        validate_dataframe(dataframe, model)
         return dataframe
     except FileNotFoundError as e:
         logger.error(f"File not found: {settings.FILENAME}. Error: {e}")
         raise FileNotFoundError(f"File not found: {settings.FILENAME}. Error: {e}")
     except EmptyDataError as e:
-        logger.error(
-            f"No data found in the file: {settings.FILENAME}. Error: {e}"
-        )
+        logger.error(f"No data found in the file: {settings.FILENAME}. Error: {e}")
         raise EmptyDataError(f"No data found in the file: {settings.FILENAME}. Error: {e}")
     except ParserError as e:
         logger.error(f"Error parsing the file: {settings.FILENAME}. Error: {e}")
         raise ParserError(f"Error parsing the file: {settings.FILENAME}. Error: {e}")
     except Exception as e:
-        logger.error(
-            f"An unexpected error occurred while loading the file:"
-            f" {settings.FILENAME}. Error: {e}"
-        )
-        raise Exception(
-            f"An unexpected error occurred while loading the file: {settings.FILENAME}. Error: {e}"
-        )
+        logger.error(f"An unexpected error occurred while loading the file: {settings.FILENAME}. Error: {e}")
+        raise Exception(f"An unexpected error occurred while loading the file: {settings.FILENAME}. Error: {e}")

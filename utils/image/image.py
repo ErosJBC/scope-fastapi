@@ -8,7 +8,7 @@ from pydantic import FilePath
 
 def encode_image(image_path: FilePath) -> str:
     """
-    Encode VTP image interface to base64
+    Encode image interface to base64
     :param image_path:
     :return: str
     """

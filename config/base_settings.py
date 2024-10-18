@@ -50,11 +50,7 @@ class BasePathSettings(BaseSettings):
                 logging.error("Missing RAW_PATH")
                 raise ValueError("Missing RAW_PATH")
             raw_path: DirectoryPath = Path(raw_path_str)
-            today: datetime = datetime.now()
-            year: str = today.strftime("%Y")
-            # month: str = str(int(today.strftime("%m")) - 1)
-            month: str = str(int(today.strftime("%m")))
-            return (raw_path / year / month / v).resolve()
+            return (raw_path / v).resolve()
         return v
 
 

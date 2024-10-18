@@ -8,14 +8,12 @@ import pandas as pd
 
 from config.settings import Settings
 from core.decorators import with_logging
-from core.persistence_manager import load_file
-from schemas.base_prices import BasePrice
-from schemas.cash_total_sales import CashTotalSales
+from core.manager import load_file
+from schemas.binnacle import Binnacle
 from schemas.client import Client
-from schemas.demand import Demand
 from schemas.price import Price
-from schemas.sales import Sales
-from schemas.sku import SKU
+from schemas.sale import Sale
+from schemas.sellout import SellOut
 
 logger: logging.Logger = logging.getLogger(__name__)
 
@@ -30,20 +28,16 @@ def extract(settings: Settings) -> dict[str, pd.DataFrame]:
     :return: A dictionary that contains the extracted dataframes
     :rtype: dict[str, pd.DataFrame]
     """
+    binnacle: pd.DataFrame = load_file(settings.binnacle, Binnacle)
     clients: pd.DataFrame = load_file(settings.clients, Client)
-    sku: pd.DataFrame = load_file(settings.skus, SKU)
-    demand: pd.DataFrame = load_file(settings.demand, Demand)
-    cash_sales: pd.DataFrame = load_file(settings.cash, CashTotalSales)
-    sales: pd.DataFrame = load_file(settings.sales, Sales)
     prices: pd.DataFrame = load_file(settings.prices, Price)
-    base_prices: pd.DataFrame = load_file(settings.base_prices, BasePrice)
+    sales: pd.DataFrame = load_file(settings.sales, Sale)
+    sellout: pd.DataFrame = load_file(settings.sellout, SellOut)
     logger.info("Data extracted")
     return {
+        "binnacle": binnacle,
         "clients": clients,
-        "sku": sku,
-        "demand": demand,
-        "cash_sales": cash_sales,
-        "sales": sales,
         "prices": prices,
-        "base_prices": base_prices,
+        "sales": sales,
+        "sellout": sellout,
     }

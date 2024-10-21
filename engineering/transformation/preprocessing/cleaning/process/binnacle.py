@@ -1,16 +1,17 @@
 """
-A module for clients in the engineering.transformation.preprocessing package.
+This module contains the class to process the binnacle data.
 """
 
 import pandas as pd
+
+from typing import Any
 
 from config.settings import BinnacleSettings
 
 
 class BinnacleProcess:
     """
-    Binnacle process representation that requires its settings to instantiate
-    the status, via and rename columns.
+    A class to process the binnacle data.
     """
 
     def __init__(self, settings: BinnacleSettings):

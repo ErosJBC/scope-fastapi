@@ -1,5 +1,5 @@
 """
-A module for clients in the engineering.transformation.preprocessing package.
+A module for sale process in the engineering.transformation.preprocessing.cleaning.process package.
 """
 
 import pandas as pd
@@ -9,7 +9,7 @@ from config.settings import SaleSettings
 
 class SaleProcess:
     """
-    SellOut process representation that requires its settings to instantiate.
+    SaleProcess process representation that requires its settings to instantiate.
     """
 
     def __init__(self, settings: SaleSettings):

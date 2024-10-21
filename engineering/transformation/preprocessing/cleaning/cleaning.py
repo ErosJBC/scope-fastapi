@@ -37,22 +37,14 @@ def clean(
     processed_binnacle: pd.DataFrame = process_binnacle(data["binnacle"], settings.binnacle)
     processed_clients: pd.DataFrame = process_client(data["clients"], settings.clients)
     processed_prices: pd.DataFrame = process_price(data["prices"], settings.prices)
-
     processed_sellout: pd.DataFrame = process_sellout(data["sellout"], settings.sellout)
-    filtered_sellout = processed_sellout[processed_sellout['COD_ZNJE'].isin(processed_binnacle['COD_ZNJE'].unique())].copy()
-    filtered_sellout.reset_index(drop=True, inplace=True)
-
     processed_sales: pd.DataFrame = process_sale(data["sales"], settings.sales)
-    merged_sales = processed_sales.merge(processed_clients[settings.clients.FILTER_COLUMNS], on=settings.sales.MERGE_COLUMNS, how='left')
-    filtered_sales = merged_sales[merged_sales['COD_ZNJE'].isin(processed_binnacle['COD_ZNJE'].unique())].copy()
-    filtered_sales.sort_values(by=['YEAR', 'MONTH'], inplace=True)
-    filtered_sales.reset_index(drop=True, inplace=True)
 
     logger.info("Cleaning finished")
     return {
         "clients": processed_clients,
-        "sellout": filtered_sellout,
+        "sellout": processed_sellout,
         "binnacle": processed_binnacle,
         "prices": processed_prices,
-        "sales": filtered_sales
+        "sales": processed_sales
     }

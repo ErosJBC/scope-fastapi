@@ -35,9 +35,6 @@ def load(
     :return: The path where the data has been saved and the updated output filename
     :rtype: tuple[str, str]
     """
-
-    save_dataframes_to_excel(transformed_data, data_additional, options)
-    # format_workbook(data, path)
+    file_b64, filename = save_dataframes_to_excel(transformed_data, data_additional, general_settings, options)
     logging.info("Data has been loaded successfully")
-
-    return "path", "filename"
+    return file_b64, filename

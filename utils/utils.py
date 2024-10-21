@@ -11,6 +11,7 @@ from random import choices
 from string import ascii_uppercase
 
 import pandas as pd
+import numpy as np
 from pydantic import NewPath, PositiveInt
 from typing import Any
 
@@ -120,9 +121,9 @@ def get_cols_widths(dataframe: pd.DataFrame) -> list[int]:
     :return: The widths of the columns
     :rtype: list[int]
     """
-    # widths = [max([len(str(s)) for s in dataframe[col].values] + [len(col)]) for col in dataframe.columns]
-    list_width = [max(len(str(val)) for val in dataframe[col].astype(str)) + 2 for col in dataframe.columns]
-    return [w + 1 for w in list_width]
+    widths = [max([len(str(s)) for s in dataframe[col].values] + [len(col)]) for col in dataframe.columns]
+    # list_width = [max(len(str(val)) for val in dataframe[col].astype(str)) + 2 for col in dataframe.columns]
+    return [w + 1 for w in widths]
 
 def trunc_number(number: int, decimals: int) -> float:
     """

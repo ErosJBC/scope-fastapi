@@ -8,6 +8,7 @@ from dash_bootstrap_components.themes import BOOTSTRAP
 from config.app_settings import app_settings, AppSettings
 from views.home.home import home_layout
 from callbacks.update.update import update_dropdowns
+from callbacks.write.write import generate_report
 
 def init_app(settings: AppSettings) -> Dash:
     """

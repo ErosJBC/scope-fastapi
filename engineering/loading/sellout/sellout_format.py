@@ -3,8 +3,8 @@ import pandas as pd
 from typing import Any
 
 from engineering.transformation.integrate.binnacle import BinnacleIntegrator
-from scope import col_index_to_letter
-from utils.utils import get_cols_widths
+
+from utils.utils import get_cols_widths, get_excel_column_letter
 
 
 def base_sheet_format(
@@ -30,24 +30,24 @@ def base_sheet_format(
     application: str = BinnacleIntegrator.get_type_application(binnacle)
     letters: dict[str, str] = {}
     if application != "TMS":
-        letters["ctd"] = col_index_to_letter(dataframe.columns.get_loc("CTD_SACOS") + 1)
-        letters["pvp"] = col_index_to_letter(dataframe.columns.get_loc("PVP") + 1)
+        letters["ctd"] = get_excel_column_letter(dataframe.columns.get_loc("CTD_SACOS") + 1)
+        letters["pvp"] = get_excel_column_letter(dataframe.columns.get_loc("PVP") + 1)
         if "Bonif. P.Base" in list(pivot.columns):
-            letters["base"] = col_index_to_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
-            letters["contribution_base"] = col_index_to_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
+            letters["base"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
+            letters["contribution_base"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
             for row in range(3, len(dataframe) + 2):
                 formula = f"={letters['ctd']}{row}*{letters['base']}{row}"
                 worksheet.write_formula(f"{letters['contribution_base']}{row}", formula)
 
         if "Bonif. P.Neto" in list(pivot.columns):
-            letters["net"] = col_index_to_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
-            letters["contribution_net"] = col_index_to_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
+            letters["net"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
+            letters["contribution_net"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
             for row in range(3, len(dataframe) + 2):
                 formula = f"={letters['ctd']}{row}*{letters['base']}{row}*{letters['net']}{row}"
                 worksheet.write_formula(f"{letters['contribution_net']}{row}", formula)
 
     for col_num, col_name in enumerate(dataframe.columns):
-        col_letter = col_index_to_letter(col_num + 1)
+        col_letter = get_excel_column_letter(col_num + 1)
         formula, cell_format = (f'=SUBTOTAL(9, {col_letter}3:{col_letter}{len(dataframe) + 2})', '')\
             if col_name in ['TM', 'Valor neto', 'Cantidad facturada'] + [f'APORTE {aplic}' for aplic in list(data_additional.columns)[4:]]\
             else ('', '')

@@ -1,9 +1,11 @@
 import pandas as pd
 
+from openpyxl.worksheet.worksheet import Worksheet
 from typing import Any
 
 from engineering.transformation.integration.binnacle import BinnacleIntegrator
 from engineering.loading.formatting.utils import get_excel_column_letter, get_cols_widths
+from schemas.request.options import Options
 
 
 def base_sheet_format(
@@ -86,28 +88,26 @@ def summary_sheet_format(
         worksheet.set_column(col_num, col_num, width)
 
 def sellout_format(
-    worksheet: Any,
+    dataframe: dict[str, pd.DataFrame],
+    worksheet: Worksheet,
     sheet_name: str,
-    dataframe: pd.DataFrame,
-    data_additional: dict[str, pd.DataFrame],
+    options: Options
 ) -> None:
     """
     Apply formatting to specific worksheet of sellout.
 
-    :param worksheet: The worksheet to apply formatting to
-    :type worksheet: Any
-    :param sheet_name: The name of the sheet
-    :type sheet_name: str
     :param dataframe: The exported dataframe
     :type dataframe: pd.DataFrame
-    :param data_additional: Additional data to be saved
-    :type data_additional: dict[str, pd.DataFrame]
+    :param worksheet: The worksheet to apply formatting to
+    :type worksheet: Worksheet
+    :param sheet_name: The name of the sheet
+    :type sheet_name: str
     :param options: The selected options
-    :type options: dict[str, Any]
-    :return: None
-    :rtype: NoneType
+    :type options: Options
     """
     if "Base" in sheet_name:
-        base_sheet_format(worksheet, dataframe, data_additional)
+        # base_sheet_format(worksheet, dataframe, data_additional)
+        pass
     else:
-        summary_sheet_format(worksheet, dataframe)
+        # summary_sheet_format(worksheet, dataframe)
+        pass

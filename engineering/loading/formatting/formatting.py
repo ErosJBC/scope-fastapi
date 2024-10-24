@@ -36,6 +36,6 @@ def format_worksheet(
         worksheet = workbook[sheet_name]
         if options.liquidation == "Sell In":
             sellin_format(data, worksheet, sheet_name, options)
-        # else:
-            # sellout_format(data, path, options)
+        else:
+            sellout_format(data, worksheet, sheet_name, options)
     workbook.save(path)

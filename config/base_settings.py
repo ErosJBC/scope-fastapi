@@ -2,15 +2,11 @@
 A module for base settings in the config package.
 """
 
-import logging
-from datetime import datetime
 from pathlib import Path
 
-from pydantic import DirectoryPath, FilePath, NonNegativeInt, field_validator
+from pydantic import DirectoryPath, FilePath, NewPath, NonNegativeInt, field_validator
 from pydantic_core.core_schema import FieldValidationInfo
 from pydantic_settings import BaseSettings
-
-logger: logging.Logger = logging.getLogger(__name__)
 
 
 class BasePathSettings(BaseSettings):
@@ -33,24 +29,22 @@ class BasePathSettings(BaseSettings):
         :rtype: FilePath | str
         """
         if info.field_name is None:
-            logging.error("info.config cannot be None")
             raise ValueError("info.config cannot be None")
-        if info.field_name == "FILENAME":
-            if not v.endswith(".xlsx") and not v.endswith(".xlsm"):
-                logging.error(
-                    f"{info.field_name} must be a string ending with '.xlsx' "
-                    f"or '.xlsm'"
-                )
+        if info.field_name == "FILENAME" or info.field_name == "PARQUET_FILENAME":
+            if not v.endswith(".xlsx") and not v.endswith(".parquet"):
                 raise ValueError(
                     f"{info.field_name} must be a string ending with '.xlsx' "
-                    f"or '.xlsm'"
+                    f"or '.parquet'"
                 )
             raw_path_str: str | None = info.data.get("RAW_PATH")
             if not raw_path_str:
-                logging.error("Missing RAW_PATH")
                 raise ValueError("Missing RAW_PATH")
             raw_path: DirectoryPath = Path(raw_path_str)
-            return (raw_path / v).resolve()
+            if info.field_name == "FILENAME":
+                return (raw_path / v).resolve()
+            elif info.field_name == "PARQUET_FILENAME":
+                parquet_dir: DirectoryPath = "parquet"
+                return (raw_path / parquet_dir / v).resolve()
         return v
 
 
@@ -61,6 +55,7 @@ class BaseDataSettings(BasePathSettings):
     """
 
     FILENAME: FilePath
+    PARQUET_FILENAME: NewPath | FilePath
     SHEET: str
     COLUMNS: list[str]
     HEADER: NonNegativeInt | None = 0

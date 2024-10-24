@@ -2,16 +2,11 @@
 This module integrates the data for the upcoming transformation process
 """
 
-import logging
-
 import pandas as pd
 
 from config.settings import Settings
-from core.decorators import with_logging
 from engineering.transformation.preprocessing.integration.sales import SaleAssembler
 from engineering.transformation.preprocessing.integration.sellout import SellOutAssembler
-
-logger: logging.Logger = logging.getLogger(__name__)
 
 
 def integrate_sellout(
@@ -59,7 +54,6 @@ def integrate_sales(
     )
     return assembled_sales
 
-@with_logging
 def integrate(
     data: dict[str, pd.DataFrame],
     settings: Settings,
@@ -80,7 +74,6 @@ def integrate(
     integrated_sales: pd.DataFrame = integrate_sales(
         data["sales"], data["clients"], data["binnacle"], settings
     )
-    logger.info("Preprocessing integration finished")
     return {
         "sellout": integrated_sellout,
         "sales": integrated_sales,

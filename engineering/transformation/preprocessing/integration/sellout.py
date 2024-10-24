@@ -4,8 +4,6 @@ This module contains the SellOutAssembler class, which is responsible for integr
 
 import pandas as pd
 
-from core.decorators import benchmark
-
 
 class SellOutAssembler:
     """
@@ -15,9 +13,9 @@ class SellOutAssembler:
     def __init__(self) -> None:
         self.sellout: str = ""
 
-    @benchmark
+    @staticmethod
     def filter_sellout(
-        self, dataframe: pd.DataFrame, binnacle: pd.DataFrame
+        dataframe: pd.DataFrame, binnacle: pd.DataFrame
     ) -> pd.DataFrame:
         """
         Integrate binnacle data to the sellout dataframe

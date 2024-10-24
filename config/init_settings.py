@@ -16,6 +16,9 @@ class InitSettings(BaseSettings):
     )
 
     PROJECT_NAME: str = "scope-project"
+    APP_NAME: str = "S.C.O.P.E"
+    DESCRIPTION: str = "SCOPE application developed in FastAPI framework"
+    VERSION: str = "0.1.0"
     ENCODING: str = "UTF-8"
     DATE_FORMAT: str = "%Y-%m-%d"
     DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"

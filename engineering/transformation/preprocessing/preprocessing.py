@@ -1,21 +1,14 @@
 """
-A module for preprocessing in the engineering.transformation.preprocessing
- package.
+A module for preprocessing in the engineering.transformation.preprocessing package.
 """
-
-import logging
 
 import pandas as pd
 
 from config.settings import Settings
-from core.decorators import with_logging
 from engineering.transformation.preprocessing.cleaning.cleaning import clean
 from engineering.transformation.preprocessing.integration.integration import integrate
 
-logger: logging.Logger = logging.getLogger(__name__)
 
-
-@with_logging
 def preprocess(
     raw_data: dict[str, pd.DataFrame], settings: Settings
 ) -> dict[str, pd.DataFrame]:
@@ -36,5 +29,4 @@ def preprocess(
     reduced_data: dict[str, pd.DataFrame] = integrate(cleaned_data, settings)
     updated_data.update(reduced_data)
 
-    logger.info("Preprocessing finished")
     return updated_data

@@ -2,7 +2,6 @@
 A module for settings in the config package.
 """
 
-import logging
 from functools import lru_cache
 
 from pydantic import (
@@ -12,8 +11,6 @@ from pydantic import (
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from config.base_settings import BaseDataSettings
-
-logger: logging.Logger = logging.getLogger(__name__)
 
 
 class BinnacleSettings(BaseDataSettings):

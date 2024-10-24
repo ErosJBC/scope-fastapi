@@ -3,10 +3,8 @@ This module contains the SaleAssembler class, which is responsible for integrati
 """
 
 import pandas as pd
-from pydantic import PositiveFloat
 
 from config.settings import Settings
-from core.decorators import benchmark
 
 
 class SaleAssembler:
@@ -18,7 +16,6 @@ class SaleAssembler:
         self.filter_columns: list[str] = settings.clients.FILTER_COLUMNS
         self.merge_columns: list[str] = settings.sales.MERGE_COLUMNS
 
-    @benchmark
     def merged_sales(
         self, dataframe: pd.DataFrame, clients: pd.DataFrame
     ) -> pd.DataFrame:
@@ -35,7 +32,6 @@ class SaleAssembler:
         merged_sales = dataframe.merge(clients[self.filter_columns], on=self.merge_columns, how='left')
         return merged_sales
 
-    @benchmark
     def filter_sales(
         self, dataframe: pd.DataFrame, binnacle: pd.DataFrame
     ) -> pd.DataFrame:

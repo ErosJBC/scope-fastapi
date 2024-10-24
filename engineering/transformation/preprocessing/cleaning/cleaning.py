@@ -1,14 +1,10 @@
 """
-A module for cleaning in the engineering-transformation-preprocessing-cleaning
- package.
+A module for cleaning in the engineering-transformation-preprocessing-cleaning package.
 """
-
-import logging
 
 import pandas as pd
 
 from config.settings import Settings
-from core.decorators import with_logging
 from engineering.transformation.preprocessing.cleaning.process.process import (
     process_client,
     process_sellout,
@@ -17,10 +13,7 @@ from engineering.transformation.preprocessing.cleaning.process.process import (
     process_sale,
 )
 
-logger: logging.Logger = logging.getLogger(__name__)
 
-
-@with_logging
 def clean(
     data: dict[str, pd.DataFrame], settings: Settings
 ) -> dict[str, pd.DataFrame]:
@@ -40,7 +33,6 @@ def clean(
     processed_sellout: pd.DataFrame = process_sellout(data["sellout"], settings.sellout)
     processed_sales: pd.DataFrame = process_sale(data["sales"], settings.sales)
 
-    logger.info("Cleaning finished")
     return {
         "clients": processed_clients,
         "sellout": processed_sellout,

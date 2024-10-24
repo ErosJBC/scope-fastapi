@@ -4,8 +4,6 @@ This module contains the class to process the binnacle data.
 
 import pandas as pd
 
-from typing import Any
-
 from config.settings import BinnacleSettings
 
 

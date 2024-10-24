@@ -4,23 +4,29 @@ The main script to run the project
 
 import logging
 
-from views.view import app
+import uvicorn
 
+from config.settings import settings
+from engineering.engineering import run_load_data
 
 logger: logging.Logger = logging.getLogger(__name__)
 
 
 def main() -> None:
     """
-    Execute the dash app.
-    Sets up the necessary configurations and runs the dash app.
+    The main function to run the project
+
     :return: None
     :rtype: NoneType
     """
-    logger.info("Running main method")
-    app.run_server(debug=True)
-    logging.info("Main method has been run successfully")
+    logger.info("Starting the data loading process.")
+    try:
+        run_load_data(settings)
+        logger.info("Data loaded successfully")
+    except Exception as e:
+        logger.error(f"An error occurred: {e}")
 
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
 
 if __name__ == "__main__":
     main()

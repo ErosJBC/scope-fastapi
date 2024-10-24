@@ -32,6 +32,10 @@ python-dotenv = "^1.0.1"
 dash = "^2.18.1"
 dash-bootstrap-components = "^1.6.0"
 justpy = "^0.14.0"
+xlsxwriter = "^3.2.0"
+fastapi = "^0.115.3"
+uvicorn = "^0.32.0"
+pyarrow = "^17.0.0"
 
 
 [build-system]

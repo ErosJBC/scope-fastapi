@@ -49,14 +49,14 @@ def base_sheet_format(
         letter["contribution_base"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Base") + 1)
         for row in range(3, len(data) + 2):
             formula = f"={letter['ctd']}{row}*{letter['base']}{row}"
-            worksheet[f'{letter['contribution_base']}{row}'] = formula
+            worksheet[f"{letter['contribution_base']}{row}"] = formula
 
     if "Bonif. P.Neto" in list(pivot.columns):
         letter["net"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Neto") + 1)
         letter["contribution_net"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Neto") + 1)
         for row in range(3, len(data) + 2):
             formula = f"={letter['ctd']}{row}*{letter['base']}{row}*{letter['net']}{row}"
-            worksheet[f'{letter['contribution_net']}{row}'] = formula
+            worksheet[f"{letter['contribution_net']}{row}"] = formula
 
     subtotal_columns: list[str] = ['TM', 'Valor neto', 'Cantidad facturada'] + [f'APORTE {applic}' for applic in list(pivot.columns)[4:]]
     subtotal_format(data, worksheet, subtotal_columns)

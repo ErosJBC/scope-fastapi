@@ -34,7 +34,7 @@ def generate_output_filename(
     discount: str = options.discount_type  # type: ignore
     month: str = options.month  # type: ignore
     year: str = options.year  # type: ignore
-    updated_output_filename: NewPath = Path(f"{base_name}_{nodo}_{discount}_{month}{year}_{today.strftime("%d_%m_%Y_%H_%M_%S")}.xlsx")
+    updated_output_filename: NewPath = Path(f"{base_name}_{nodo}_{discount}_{month}{year}_{today.strftime('%d_%m_%Y_%H_%M_%S')}.xlsx")
     return updated_output_filename
 
 def save_dataframes_to_excel(

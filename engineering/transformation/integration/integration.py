@@ -3,7 +3,6 @@ A module for integration in the engineering.transformation.integration package.
 """
 
 import pandas as pd
-from typing import Any
 
 from engineering.transformation.integration.binnacle import BinnacleIntegrator
 from engineering.transformation.integration.discount_type.sellout import generate_sellout_sheets

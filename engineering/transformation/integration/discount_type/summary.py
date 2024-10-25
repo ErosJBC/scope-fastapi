@@ -4,8 +4,6 @@ This module is used to generate the summary sheet for the rebate, fluvial logist
 
 import pandas as pd
 
-from typing import Any
-
 from constants.constants import constants
 from schemas.request.options import Options
 
@@ -29,10 +27,10 @@ def generate_summary_rebate_sheet(
     :rtype: dict[str, pd.DataFrame]
     """
     cols_to_aggregate = { 'TMS': 'sum', 'VALOR_NETO': 'sum' }
-    if options.nodo == "D. COPACIGULF": cols_to_aggregate.update({'APORTE': 'sum'})
+    if options.nodo != "D. COPACIGULF": cols_to_aggregate.update({'APORTE': 'sum'})
     summary_sheet: pd.DataFrame = sellin.groupby('MONTH').agg(cols_to_aggregate).reset_index()
+    summary_sheet["MONTH"] = summary_sheet["MONTH"].replace(constants.MONTHS)
     if options.nodo == "D. COPACIGULF":
-        summary_sheet["MONTH"] = summary_sheet["MONTH"].replace(constants.MONTHS)
         value = binnacle["VALOR"].unique().tolist()[0] if binnacle is not None else 0
 
         summary_sheet.loc["TOTAL", "MONTH"] = "Promedio VN"

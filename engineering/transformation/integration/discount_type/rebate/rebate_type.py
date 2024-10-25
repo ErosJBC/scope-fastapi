@@ -1,7 +1,5 @@
 import pandas as pd
 
-from typing import Any
-
 from engineering.transformation.integration.binnacle import BinnacleIntegrator
 from engineering.transformation.integration.discount_type.rebate.rebate import RebateSellinIntegrator
 from engineering.transformation.integration.discount_type.summary import generate_summary_rebate_sheet

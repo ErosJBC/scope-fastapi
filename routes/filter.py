@@ -15,8 +15,16 @@ filterRouter = APIRouter()
 logger: logging.Logger = logging.getLogger(__name__)
 
 
-@filterRouter.get("/filter", tags=["Filter Options for Data"])
+@filterRouter.get("/filter", tags=["Filter Options for Data"], status_code=200)
 async def filter_options(options: Options = Depends()) -> JSONResponse:
+    """
+    Filter the options based on the selected options.
+
+    :param options: The selected options
+    :type options: Options
+    :return: The filtered options
+    :rtype: JSONResponse
+    """
     try:
         filtered_options = generate_filtered_options(options)
         logger.info("Filtering data")

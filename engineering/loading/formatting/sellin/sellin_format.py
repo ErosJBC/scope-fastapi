@@ -6,7 +6,13 @@ import pandas as pd
 
 from openpyxl.worksheet.worksheet import Worksheet
 
-from engineering.loading.formatting.excel_styles import subtotal_format, header_format, styles, summary_format
+from engineering.loading.formatting.excel_styles import (
+    columns_format,
+    header_format,
+    subtotal_format,
+    summary_format,
+    styles,
+)
 from engineering.loading.formatting.utils import get_excel_column_letter
 from schemas.request.options import Options
 
@@ -30,6 +36,7 @@ def sellin_format(
     :type options: Options
     """
     data = dataframe[sheet_name]
+    worksheet.sheet_view.showGridLines = False
     list_columns = ['TM', 'Valor neto', 'Cantidad facturada']
     application: str = ""
     letter: dict[str, str] = {}
@@ -38,11 +45,13 @@ def sellin_format(
             if "Base" in sheet_name:
                 subtotal_format(data, worksheet, list_columns)
                 header_format(data, worksheet)
+                columns_format(data, worksheet)
+
             if "Resumen" in sheet_name:
                 pass
         else:
-            list_columns += ['APORTE']
-            if application != "TMS":
+            if "Base" in sheet_name:
+                list_columns += ['APORTE']
                 letter["tms"] = get_excel_column_letter(data.columns.get_loc('TM') + 1)
                 letter["pvp"] = get_excel_column_letter(data.columns.get_loc('PVP') + 1)
                 letter["bonus"] = get_excel_column_letter(data.columns.get_loc('Bonificación') + 1)
@@ -51,34 +60,24 @@ def sellin_format(
                 column_contribution = data.shape[1]
                 letter["contribution"] = get_excel_column_letter(column_contribution)
 
-            if application == "TMS":
-                for row_num in range(3, len(data) + 2):
-                    formula = f'={letter["tms"]}{row_num}*{letter["bonus"]}{row_num}'
-                    worksheet[f'{letter["contribution"]}{row_num}'] = formula
-            elif application == "P_BASE":
-                for row_num in range(3, len(data) + 2):
-                    formula = f'={letter["tms"]}{row_num}*{letter["pvp"]}{row_num}*{letter["bonus"]}{row_num}*(1+{letter["d_vol"]}{row_num})'
-                    worksheet[f'{letter["contribution"]}{row_num}'] = formula
-            else:
-                for row_num in range(3, len(data) + 2):
-                    formula = f'={letter["tms"]}{row_num}*{letter["pvp"]}{row_num}*{letter["bonus"]}{row_num}*(1+{letter["d_vol"]}{row_num}+{letter["d_adit"]}{row_num})'
-                    worksheet[f'{letter["contribution"]}{row_num}'] = formula
-            subtotal_format(data, worksheet, list_columns)
-            header_format(data, worksheet)
-            worksheet[f'{letter["contribution"]}2'] = "Importe NC"
-            column_d_vol = data.columns.get_loc('Dto. Factura')
-            column_d_adit = data.columns.get_loc('Dto. Adicional')
-            letter["d_vol"] = get_excel_column_letter(column_d_vol + 1)
-            letter["d_adit"] = get_excel_column_letter(column_d_adit + 1)
-            worksheet[f'{letter["d_vol"]}{column_d_vol + 1}'] = 18
-            worksheet[f'{letter["d_adit"]}{column_d_adit + 1}'].number_format = styles["percentage"]
-            worksheet[f'{letter["d_adit"]}{column_d_adit + 1}'] = 18
-            worksheet[f'{letter["d_vol"]}{column_d_vol + 1}'].number_format = styles["percentage"]
-            if application != "TMS":
-                column_bonus = data.columns.get_loc('Bonificación')
-                letter["bonus"] = get_excel_column_letter(column_bonus + 1)
-                worksheet[f'{letter["bonus"]}{column_bonus + 1}'] = 18
-                worksheet[f'{letter["bonus"]}{column_bonus + 1}'].number_format = styles["percentage"]
+                if application == "TMS":
+                    for row_num in range(3, len(data) + 2):
+                        formula = f'={letter["tms"]}{row_num}*{letter["bonus"]}{row_num}'
+                        worksheet[f'{letter["contribution"]}{row_num}'] = formula
+                elif application == "P_BASE":
+                    for row_num in range(3, len(data) + 2):
+                        formula = f'={letter["tms"]}{row_num}*{letter["pvp"]}{row_num}*{letter["bonus"]}{row_num}*(1+{letter["d_vol"]}{row_num})'
+                        worksheet[f'{letter["contribution"]}{row_num}'] = formula
+                else:
+                    for row_num in range(3, len(data) + 2):
+                        formula = f'={letter["tms"]}{row_num}*{letter["pvp"]}{row_num}*{letter["bonus"]}{row_num}*(1+{letter["d_vol"]}{row_num}+{letter["d_adit"]}{row_num})'
+                        worksheet[f'{letter["contribution"]}{row_num}'] = formula
+                subtotal_format(data, worksheet, list_columns)
+                header_format(data, worksheet)
+                columns_format(data, worksheet)
+                worksheet[f'{letter["contribution"]}2'] = "Importe NC"
+
+            if "Resumen" in sheet_name: summary_format(data, worksheet)
     else:
         list_columns += ['APORTE']
         if options.discount_type.startswith("Logístico"):  # type: ignore
@@ -95,20 +94,19 @@ def sellin_format(
 
                 subtotal_format(data, worksheet, list_columns)
                 header_format(data, worksheet)
+                columns_format(data, worksheet)
                 worksheet[f'{letter["contribution"]}2'] = "Importe NC"
 
             if "Resumen" in sheet_name: summary_format(data, worksheet)
         elif options.discount_type == "Reconocimiento Comercial":
             if "Base" in sheet_name:
-                if application != "TMS":
-                    letter["tms"] = get_excel_column_letter(data.columns.get_loc('TM') + 1)
-                    letter["ctd"] = get_excel_column_letter(data.columns.get_loc('Cantidad facturada') + 1)
-                    letter["pvp"] = get_excel_column_letter(data.columns.get_loc('PVP') + 1)
-                    letter["bonus"] = get_excel_column_letter(data.columns.get_loc('Bonificación') + 1)
-                    letter["d_vol"] = get_excel_column_letter(data.columns.get_loc('Dto. Factura') + 1)
-                    letter["credit"] = get_excel_column_letter(data.columns.get_loc('P. Crédito') + 1)
-                    letter["d_adit"] = get_excel_column_letter(data.columns.get_loc('Dto. Adicional') + 1)
-
+                letter["tms"] = get_excel_column_letter(data.columns.get_loc('TM') + 1)
+                letter["ctd"] = get_excel_column_letter(data.columns.get_loc('Cantidad facturada') + 1)
+                letter["pvp"] = get_excel_column_letter(data.columns.get_loc('PVP') + 1)
+                letter["bonus"] = get_excel_column_letter(data.columns.get_loc('Bonificación') + 1)
+                letter["d_vol"] = get_excel_column_letter(data.columns.get_loc('Dto. Factura') + 1)
+                letter["credit"] = get_excel_column_letter(data.columns.get_loc('P. Crédito') + 1)
+                letter["d_adit"] = get_excel_column_letter(data.columns.get_loc('Dto. Adicional') + 1)
                 letter["contribution"] = get_excel_column_letter(data.columns.get_loc('APORTE') + 1)
 
                 if application == "TMS":
@@ -134,5 +132,6 @@ def sellin_format(
 
                 subtotal_format(data, worksheet, list_columns)
                 header_format(data, worksheet)
+                columns_format(data, worksheet)
 
             if "Resumen" in sheet_name: summary_format(data, worksheet)

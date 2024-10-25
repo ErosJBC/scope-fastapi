@@ -30,7 +30,7 @@ class RebateSellinIntegrator(SellinIntegrator):
         )
         return dataframe
 
-    def add_credit_column(self, dataframe: pd.DataFrame, type_application: str = None) -> pd.DataFrame:
+    def add_credit_column(self, dataframe: pd.DataFrame, type_application: str = "TMS") -> pd.DataFrame:
         """
         Adds credit column to the dataframe
 
@@ -58,9 +58,9 @@ class RebateSellinIntegrator(SellinIntegrator):
         if type_application == "TMS":
             dataframe['APORTE'] = dataframe['TMS'] * dataframe['Bonificación'].astype(float)
         elif type_application == "P_BASE":
-            dataframe['APORTE'] = (dataframe['P_BASE'] * dataframe['Bonificación'] *
+            dataframe['APORTE'] = (dataframe['P_BASE'] * dataframe['Bonificación'].astype(float) *
                 (1 + dataframe['D_CONT'] / (dataframe['P_BASE'] + dataframe['D_VOL']))
             )
         else:
-            dataframe['APORTE'] = (dataframe['P_BASE'] + dataframe['D_VOL']) * dataframe['Bonificación']
+            dataframe['APORTE'] = (dataframe['P_BASE'] + dataframe['D_VOL']) * dataframe['Bonificación'].astype(float)
         return dataframe

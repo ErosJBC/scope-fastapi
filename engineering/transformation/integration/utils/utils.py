@@ -31,7 +31,7 @@ def generate_base_months_sheets(
         list_month = [options.month]  # type: ignore
 
     columns_to_drop = ['YEAR', 'MONTH', 'COD_ZNJE', 'DES_ZNJE', 'P_BASE', 'D_VOL', 'D_COT', 'D_CONT', 'D_LOG', 'R_LOG', 'NCF', 'P_NETO']
-    if options.discount_type == "Rebate" and options.nodo == "D. COPACIGULF":
+    if options.nodo != "D. COPACIGULF":
         columns_to_drop = columns_to_drop + ['CLASE_FACTURA', 'SOCIOS']
 
     for month in list_month:
@@ -39,7 +39,18 @@ def generate_base_months_sheets(
         df_export: pd.DataFrame = sales.loc[sales['MONTH'] == month].copy()
         df_export.drop(columns=columns_to_drop, axis=1, inplace=True)
         df_export['FECHA'] = pd.to_datetime(df_export['FECHA']).dt.strftime('%d/%m/%Y')
+        df_export['COD_ZDES'] = pd.to_numeric(df_export['COD_ZDES'], downcast="integer")
+        df_export['COD_PRODUCTO'] = pd.to_numeric(df_export['COD_PRODUCTO'], downcast="integer")
+        df_export['COD_ZDEM'] = pd.to_numeric(df_export['COD_ZDEM'], downcast="integer")
         df_export.rename(columns=constants.COLUMNS_DATAFRAME, inplace=True)
+        df_export['Cantidad facturada'] = pd.to_numeric(df_export['Cantidad facturada'])
+        df_export['TM'] = pd.to_numeric(df_export['TM'])
+        df_export['Valor neto'] = pd.to_numeric(df_export['Valor neto'])
+        df_export['Bonificación'] = pd.to_numeric(df_export['Bonificación'])
+        df_export['PVP'] = pd.to_numeric(df_export['PVP'])
+        df_export['Dto. Factura'] = pd.to_numeric(df_export['Dto. Factura'])
+        df_export['P. Crédito'] = pd.to_numeric(df_export['P. Crédito'])
+        df_export['Dto. Adicional'] = pd.to_numeric(df_export['Dto. Adicional'])
         sheets[sheet_name] = df_export
     return sheets
 

@@ -55,11 +55,13 @@ def integrate_sellout(
     """
     sellout_data = data["sellout"].copy()
     binnacle_data = data["binnacle"].copy()
-    sellout_integrator: SellOutIntegrator = SellOutIntegrator(sellout_data)
     list_month: list[str] = BinnacleIntegrator.get_list_month_by_period(binnacle_data, options.month)  # type: ignore
     format_binnacle = BinnacleIntegrator.overwrite_family(binnacle_data)
+    sellout_integrator: SellOutIntegrator = SellOutIntegrator(sellout_data)
     filtered_sellout = sellout_integrator.filter_options(format_binnacle, options, list_month)
-    filtered_sellout["COD_ZDES"] = filtered_sellout["COD_ZDES"].astype(int)
+    filtered_sellout["COD_ZDES"] = pd.to_numeric(filtered_sellout["COD_ZDES"], downcast="integer").astype(str)
+    filtered_sellout["COD_ZNJE"] = pd.to_numeric(filtered_sellout["COD_ZNJE"], downcast="integer").astype(str)
+    data.update({"binnacle": format_binnacle})
     data.update({"sellout": filtered_sellout})
 
     sheets = generate_sellout_sheets(data, options)
@@ -70,9 +72,9 @@ def integrate(
     options: Options
 ) -> dict[str, pd.DataFrame]:
     """
-    Integrate process for transformation step
+    Integrate a process for transformation step
 
-    :param data: The data to use for integration process
+    :param data: The data to use for an integration process
     :type data: dict[str, pd.DataFrame]
     :param options: The selected options for the transformation
     :type options: dict[str, Any]

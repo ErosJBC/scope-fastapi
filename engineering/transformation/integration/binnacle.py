@@ -44,11 +44,9 @@ class BinnacleIntegrator:
         :param dataframe: The dataframe containing binnacle data.
         :type dataframe: pd.DataFrame
         :return: A dataframe with the family column overwritten.
-        :rtype: pd.DataFrame
+        :rtype: Pd.DataFrame
         """
-        # dataframe['FAMILIA'] = dataframe['FAMILIA'].str.split(' ').str[1].str[:3].str.upper()
-        # dataframe['FAMILIA'] = dataframe['FAMILIA'].str.replace('nan', 'OTR').split(' ').apply(lambda x: x[1][:3].upper() if len(x) > 1 else x[0][:3].upper())
-        dataframe['FAMILIA'] = dataframe['FAMILIA'].apply(lambda family: str(family).split(" ")[1][:3].upper() if len(str(family).split(" ")) > 1 else str(family).split(" ")[0][:3].upper())
+        dataframe['FAMILIA'] = dataframe['FAMILIA'].apply(lambda family: str(family).split(" ")[1][:3].upper())
         return dataframe
 
     @staticmethod
@@ -145,7 +143,8 @@ class BinnacleIntegrator:
     @staticmethod
     def create_validators_column(
         binnacle: pd.DataFrame,
-        sellin_sellout: pd.DataFrame
+        sellin_sellout: pd.DataFrame,
+        is_sellout: bool = False
     ) -> pd.DataFrame:
         """
         Generate the dataframe with the validators
@@ -154,10 +153,13 @@ class BinnacleIntegrator:
         :type binnacle: pd.DataFrame
         :param sellin_sellout: The filtered sellin or sellout dataframe
         :type sellin_sellout: pd.DataFrame
+        :param is_sellout: A flag to determine if the dataframe is sellout
+        :type is_sellout: bool
         :return: The dataframe with the validators
         :rtype: pd.DataFrame
         """
         validators: list[str] = ['COD_ZDES', 'COD_ZDEM', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO']
+        if is_sellout: validators.remove('COD_ZDEM')
         validators_df: pd.DataFrame = binnacle.copy()
         for index, column in enumerate(validators):
             expanded = []

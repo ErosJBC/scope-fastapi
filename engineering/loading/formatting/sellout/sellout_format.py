@@ -1,91 +1,78 @@
+"""
+This module contains functions to format the sellout data.
+"""
+
 import pandas as pd
 
 from openpyxl.worksheet.worksheet import Worksheet
-from typing import Any
 
-from engineering.transformation.integration.binnacle import BinnacleIntegrator
-from engineering.loading.formatting.utils import get_excel_column_letter, get_cols_widths
+from engineering.loading.formatting.excel_styles import (
+    header_format,
+    summary_format,
+    subtotal_format,
+)
+from engineering.loading.formatting.utils import (
+    get_cols_widths,
+    get_excel_column_letter,
+)
 from schemas.request.options import Options
 
 
 def base_sheet_format(
-    worksheet: Any,
-    dataframe: pd.DataFrame,
-    data_additional: dict[str, pd.DataFrame]
+    dataframe: dict[str, pd.DataFrame],
+    worksheet: Worksheet,
+    sheet_name: str,
+    options: Options
 ) -> None:
     """
     Apply formatting to the base sheet of sellout.
 
-    :param worksheet: The worksheet to apply formatting to
-    :type worksheet: Any
     :param dataframe: The exported dataframe
-    :type dataframe: pd.DataFrame
-    :param data_additional: Additional data to be saved
-    :type data_additional: dict[str, pd.DataFrame]
+    :type dataframe: dict[str, pd.DataFrame]
+    :param worksheet: The worksheet to apply formatting to
+    :type worksheet: Worksheet
+    :param sheet_name: The name of the sheet
+    :type sheet_name: str
+    :param options: The selected options
+    :type options: Options
     :return: None
     :rtype: NoneType
     """
-
-    pivot: pd.DataFrame = data_additional["pivot"]
-    binnacle: pd.DataFrame = data_additional["binnacle"]
-    application: str = BinnacleIntegrator.get_type_application(binnacle)
-    letters: dict[str, str] = {}
-    if application != "TMS":
-        letters["ctd"] = get_excel_column_letter(dataframe.columns.get_loc("Cantidad facturada") + 1)
-        letters["pvp"] = get_excel_column_letter(dataframe.columns.get_loc("PVP") + 1)
-        if "Bonif. P.Base" in list(pivot.columns):
-            letters["base"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
-            letters["contribution_base"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Base") + 1)
-            for row in range(3, len(dataframe) + 2):
-                formula = f"={letters['ctd']}{row}*{letters['base']}{row}"
-                worksheet.write_formula(f"{letters['contribution_base']}{row}", formula)
-
-        if "Bonif. P.Neto" in list(pivot.columns):
-            letters["net"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
-            letters["contribution_net"] = get_excel_column_letter(dataframe.columns.get_loc("Bonif. P.Neto") + 1)
-            for row in range(3, len(dataframe) + 2):
-                formula = f"={letters['ctd']}{row}*{letters['base']}{row}*{letters['net']}{row}"
-                worksheet.write_formula(f"{letters['contribution_net']}{row}", formula)
-
-    for col_num, col_name in enumerate(dataframe.columns):
-        col_letter = get_excel_column_letter(col_num + 1)
-        formula, cell_format = (f'=SUBTOTAL(9, {col_letter}3:{col_letter}{len(dataframe) + 2})', '')\
-            if col_name in ['TM', 'Valor neto', 'Cantidad facturada'] + [f'APORTE {applic}' for applic in list(pivot.columns)[4:]]\
-            else ('', '')
-        worksheet.write(0, col_num, formula, cell_format)
-
-    col_index = dataframe.columns.get_loc("Dto. Factura")
-    worksheet.set_column(col_index, col_index, 18, "")
+    data: pd.DataFrame = dataframe[sheet_name]
+    pivot: pd.DataFrame = dataframe["pivot"]
+    letter: dict[str, str] = {
+        "ctd": get_excel_column_letter(data.columns.get_loc("Cantidad facturada") + 1),
+        "pvp": get_excel_column_letter(data.columns.get_loc("PVP") + 1)
+    }
     if "Bonif. P.Base" in list(pivot.columns):
-        worksheet.write(1, dataframe.columns.get_loc("Bonif. P.Base") - 1, "Importe P.Base", "")
-        col_index = dataframe.columns.get_loc("Bonif. P.Base")
-        worksheet.write(col_index, col_index, 18, "")
+        letter["base"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Base") + 1)
+        letter["contribution_base"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Base") + 1)
+        for row in range(3, len(data) + 2):
+            formula = f"={letter['ctd']}{row}*{letter['base']}{row}"
+            worksheet[f'{letter['contribution_base']}{row}'] = formula
 
     if "Bonif. P.Neto" in list(pivot.columns):
-        worksheet.write(1, dataframe.columns.get_loc("Bonif. P.Neto") - 1, "Importe P.Neto", "")
-        col_index = dataframe.columns.get_loc("Bonif. P.Neto")
-        worksheet.write(col_index, col_index, 18, "")
+        letter["net"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Neto") + 1)
+        letter["contribution_net"] = get_excel_column_letter(data.columns.get_loc("Bonif. P.Neto") + 1)
+        for row in range(3, len(data) + 2):
+            formula = f"={letter['ctd']}{row}*{letter['base']}{row}*{letter['net']}{row}"
+            worksheet[f'{letter['contribution_net']}{row}'] = formula
 
-def summary_sheet_format(
-    worksheet: Any,
-    dataframe: pd.DataFrame
-) -> None:
-    """
-    Apply formatting to the summary sheet of sellout.
+    subtotal_columns: list[str] = ['TM', 'Valor neto', 'Cantidad facturada'] + [f'APORTE {applic}' for applic in list(pivot.columns)[4:]]
+    subtotal_format(data, worksheet, subtotal_columns)
+    header_format(data, worksheet)
 
-    :param worksheet: The worksheet to apply formatting to
-    :type worksheet: Any
-    :param dataframe: The exported dataframe
-    :type dataframe: pd.DataFrame
-    :return: None
-    :rtype: NoneType
-    """
-    for col_num, value in enumerate(dataframe.columns.values):
-        worksheet.write(0, col_num, value, "")
-    for col_num, value in enumerate(dataframe.iloc[-1]):
-        worksheet.write(len(dataframe), col_num, value, "")
-    for col_num, width in enumerate(get_cols_widths(dataframe)):
-        worksheet.set_column(col_num, col_num, width)
+    # col_index = data.columns.get_loc("Dto. Factura")
+    # worksheet.set_column(col_index, col_index, 18, "")
+    # if "Bonif. P.Base" in list(pivot.columns):
+    #     worksheet.write(1, data.columns.get_loc("Bonif. P.Base") - 1, "Importe P.Base", "")
+    #     col_index = data.columns.get_loc("Bonif. P.Base")
+    #     worksheet.write(col_index, col_index, 18, "")
+    #
+    # if "Bonif. P.Neto" in list(pivot.columns):
+    #     worksheet.write(1, data.columns.get_loc("Bonif. P.Neto") - 1, "Importe P.Neto", "")
+    #     col_index = data.columns.get_loc("Bonif. P.Neto")
+    #     worksheet.write(col_index, col_index, 18, "")
 
 def sellout_format(
     dataframe: dict[str, pd.DataFrame],
@@ -105,9 +92,6 @@ def sellout_format(
     :param options: The selected options
     :type options: Options
     """
-    if "Base" in sheet_name:
-        # base_sheet_format(worksheet, dataframe, data_additional)
-        pass
-    else:
-        # summary_sheet_format(worksheet, dataframe)
-        pass
+    worksheet.sheet_view.showGridLines = False
+    if "Base" in sheet_name: base_sheet_format(dataframe, worksheet, sheet_name, options)
+    if "Resumen" in sheet_name: summary_format(dataframe[sheet_name], worksheet)

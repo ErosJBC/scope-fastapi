@@ -28,6 +28,7 @@ def generate_sellout_sheets(
     binnacle: pd.DataFrame = data["binnacle"].copy()
     sellout: pd.DataFrame = data["sellout"].copy()
     prices: pd.DataFrame = data["prices"].copy()
+    binnacle = BinnacleIntegrator.create_validators_column(binnacle, sellout, True)
     sellout_integrator: SellOutIntegrator = SellOutIntegrator(sellout)
 
     pivot_df: pd.DataFrame = BinnacleIntegrator.pivot_dataframe(binnacle)

@@ -22,7 +22,7 @@ def format_worksheet(
     Apply formatting to specific worksheet.
 
     :param data: A dictionary with keys as sheet names and values as dataframes.
-    :type data: dict[str, pd.DataFrame]
+    :type data: Dict[str, pd.DataFrame]
     :param path: The file path of the Excel file
     :type path: FilePath
     :param options: The selected options
@@ -33,9 +33,10 @@ def format_worksheet(
     workbook: Workbook = load_workbook(path)
     worksheet: Worksheet
     for sheet_name in data:
-        worksheet = workbook[sheet_name]
-        if options.liquidation == "Sell In":
-            sellin_format(data, worksheet, sheet_name, options)
-        else:
-            sellout_format(data, worksheet, sheet_name, options)
+        if sheet_name in workbook.sheetnames:
+            worksheet = workbook[sheet_name]
+            if options.liquidation == "Sell In":
+                sellin_format(data, worksheet, sheet_name, options)
+            else:
+                sellout_format(data, worksheet, sheet_name, options)
     workbook.save(path)

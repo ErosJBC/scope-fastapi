@@ -51,7 +51,7 @@ def generate_filtered_options(options: Options) -> dict[str, Any]:
         filtered_sales = filtered_sales[filtered_sales["YEAR"] == options.year]
 
     filtered_options["month"] = [
-        { "label": month, "value": str(month) } for month in filtered_sales["MONTH"].astype(int).sort_values().unique()
+        { "label": month, "value": month } for month in filtered_sales["MONTH"].astype(str).unique()
     ]
 
     return filtered_options

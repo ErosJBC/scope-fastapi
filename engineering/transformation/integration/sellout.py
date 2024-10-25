@@ -13,6 +13,12 @@ class SellOutIntegrator:
     """
 
     def __init__(self, dataframe) -> None:
+        """
+        Constructor of the class.
+
+        :param dataframe:
+        :type dataframe: pd.DataFrame
+        """
         self.dataframe: pd.DataFrame = dataframe
 
     def filter_options(self, binnacle: pd.DataFrame, options: Options, list_month: list[str]) -> pd.DataFrame:
@@ -20,18 +26,18 @@ class SellOutIntegrator:
         Filters the sellout dataframe based on the selected options.
 
         :param binnacle: The binnacle dataframe.
-        :type binnacle: pd.DataFrame
+        :type binnacle: Pd.DataFrame
         :param options: The options selected by the user.
-        :type options: dict[str, str]
+        :type options: Dict[str, str]
         :param list_month: The list of months.
-        :type list_month: list[str]
+        :type list_month: List[str]
         :return: A dataframe filtered by the selected options.
         :rtype: pd.DataFrame
         """
         filtered_df = self.dataframe[
-            (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &
-            (self.dataframe["YEAR"] == int(options.year)) &  # type: ignore
-            (self.dataframe["MONTH"].isin([int(i) for i in list_month]))
+            (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &  # type: ignore
+            (self.dataframe["YEAR"] == options.year) &  # type: ignore
+            (self.dataframe["MONTH"].isin(list_month))
             ].reset_index(drop=True).copy()
         return filtered_df
 
@@ -41,7 +47,7 @@ class SellOutIntegrator:
         Formats the family column in the dataframe.
 
         :param dataframe: The dataframe to format the family column.
-        :type dataframe: pd.DataFrame
+        :type dataframe: Pd.DataFrame
         :return: The dataframe with the family column formatted.
         :rtype: pd.DataFrame
         """
@@ -53,7 +59,7 @@ class SellOutIntegrator:
         Merges the sellout dataframe with the prices dataframe.
 
         :param prices: The prices dataframe.
-        :type prices: pd.DataFrame
+        :type prices: Pd.DataFrame
         :return: A dataframe with the sellout data merged with the prices data.
         :rtype: pd.DataFrame
         """
@@ -70,18 +76,18 @@ class SellOutIntegrator:
         Merges the sellout dataframe with the pivot dataframe.
 
         :param merged_df: The sellout dataframe.
-        :type merged_df: pd.DataFrame
+        :type merged_df: Pd.DataFrame
         :param pivot_df: The pivot dataframe.
-        :type pivot_df: pd.DataFrame
+        :type pivot_df: Pd.DataFrame
         :return: A dataframe with the sellout data merged with the pivot data.
         :rtype: pd.DataFrame
         """
-        merged_df: pd.DataFrame = merged_df.merge(
+        merged_pivot_df: pd.DataFrame = merged_df.merge(
             pivot_df,
             on=['COD_ZDES', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO'],
             how='left'
         )
-        return merged_df
+        return merged_pivot_df
 
     @staticmethod
     def add_contribution_column(columns: list[str], dataframe: pd.DataFrame) -> pd.DataFrame:

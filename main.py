@@ -21,7 +21,7 @@ def main() -> None:
     """
     logger.info("Starting the data loading process.")
     try:
-        # run_load_data(settings)
+        run_load_data(settings)
         logger.info("Data loaded successfully")
     except Exception as e:
         logger.error(f"An error occurred: {e}")

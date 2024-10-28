@@ -48,7 +48,7 @@ def generate_filtered_options(options: Options) -> dict[str, Any]:
     ]
 
     if options.year is not None:
-        filtered_sales = filtered_sales[filtered_sales["YEAR"] == options.year]
+        filtered_sales = filtered_sales[filtered_sales["YEAR"] == int(options.year)]
 
     filtered_options["month"] = [
         { "label": month, "value": month } for month in filtered_sales["MONTH"].astype(str).unique()

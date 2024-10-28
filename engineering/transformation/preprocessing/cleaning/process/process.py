@@ -87,8 +87,6 @@ def process_sellout(
     renamed_sellout['COD_PRODUCTO'] = renamed_sellout['COD_PRODUCTO'].astype(str)
     renamed_sellout['COD_ZNJE'] = pd.to_numeric(renamed_sellout['COD_ZNJE'], downcast="integer").apply(lambda x: str(x))
     renamed_sellout = renamed_sellout.sort_values(by=['YEAR', 'MONTH'])
-    renamed_sellout['YEAR'] = renamed_sellout['YEAR'].astype(str)
-    renamed_sellout['MONTH'] = renamed_sellout['MONTH'].astype(str)
     return renamed_sellout
 
 def process_price(

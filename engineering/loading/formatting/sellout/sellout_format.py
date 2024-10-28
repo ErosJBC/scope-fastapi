@@ -9,7 +9,7 @@ from openpyxl.worksheet.worksheet import Worksheet
 from engineering.loading.formatting.excel_styles import (
     header_format,
     summary_format,
-    subtotal_format,
+    subtotal_format, columns_format,
 )
 from engineering.loading.formatting.utils import (
     get_cols_widths,
@@ -61,6 +61,7 @@ def base_sheet_format(
     subtotal_columns: list[str] = ['TM', 'Valor neto', 'Cantidad facturada'] + [f'APORTE {applic}' for applic in list(pivot.columns)[4:]]
     subtotal_format(data, worksheet, subtotal_columns)
     header_format(data, worksheet)
+    columns_format(data, worksheet)
 
     # col_index = data.columns.get_loc("Dto. Factura")
     # worksheet.set_column(col_index, col_index, 18, "")

@@ -122,8 +122,8 @@ def columns_format(data: pd.DataFrame, worksheet: Worksheet) -> None:
     :type worksheet: Worksheet
     """
     number_columns: list[str] = ["Cliente", "Material", "Codigo Destinatario"]
-    percentage_columns: list[str] = ["Bonificación", "Dto. Factura", "Dto. Adicional"]
-    thousand_columns: list[str] = ["Valor neto", "PVP", "P. Crédito", "APORTE", "Importe NC"]
+    percentage_columns: list[str] = ["Bonificación", "Dto. Factura", "Dto. Adicional", "Bonif. P.Base", "Bonif. P.Neto"]
+    thousand_columns: list[str] = ["Valor neto", "PVP", "P. Crédito", "APORTE", "Importe NC", "APORTE Bonif. P.Base", "APORTE Bonif. P.Neto"]
     list_columns: list[str] = number_columns + percentage_columns + thousand_columns
     for column_num, column_name in enumerate(data.columns):
         if column_name in list_columns:

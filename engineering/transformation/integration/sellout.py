@@ -18,6 +18,8 @@ class SellOutIntegrator:
 
         :param dataframe:
         :type dataframe: Pd.DataFrame
+        :return: None
+        :rtype: NoneType
         """
         self.dataframe: pd.DataFrame = dataframe
 
@@ -36,8 +38,8 @@ class SellOutIntegrator:
         """
         filtered_df = self.dataframe[
             (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &  # type: ignore
-            (self.dataframe["YEAR"] == options.year) &  # type: ignore
-            (self.dataframe["MONTH"].isin(list_month))
+            (self.dataframe["YEAR"] == int(options.year)) &  # type: ignore
+            (self.dataframe["MONTH"].isin([int(month) for month in list_month]))
         ].reset_index(drop=True).copy()
         return filtered_df
 
@@ -85,11 +87,8 @@ class SellOutIntegrator:
         merged_pivot_df: pd.DataFrame = merged_df.merge(
             pivot_df,
             on=['COD_ZDES', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO'],
-            how='left'
+            how='inner'
         )
-        print("Merged pivot dataframe")
-        print(merged_pivot_df.head())
-        print(merged_pivot_df.dtypes)
         return merged_pivot_df
 
     @staticmethod
@@ -108,5 +107,4 @@ class SellOutIntegrator:
             dataframe[f'APORTE {application}'] = dataframe['PVP'] * dataframe['CTD_SACOS'] * dataframe[application] * (
                 1 if application == 'Bonif. P.Base' else dataframe['Dto. Factura']
             )
-        print(dataframe.head())
         return dataframe

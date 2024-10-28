@@ -28,6 +28,8 @@ class SaleProcess:
         """
         dataframe['Periodo'] = dataframe['Periodo'].astype(str)
         dataframe[['Month', 'Year']] = dataframe['Periodo'].str.split('.', expand=True)
+        dataframe['Month'] = dataframe['Month'].astype(int)
+        dataframe['Year'] = dataframe['Year'].astype(int)
         added_columns_df: pd.DataFrame = dataframe[['Year', 'Month'] + list(self.columns[1:])]
         return added_columns_df
 

@@ -29,7 +29,7 @@ def generate_fluvial_logistic_sheets(
     """
     sellin = data["sales"].copy()
     sellin['Bonificación'] = pd.to_numeric(sellin['Bonificación'].apply(
-        lambda x: str(x).replace("$", "").replace(",", ".")
+        lambda x: str(x).replace("$", "").replace(",", "")
     ))
     fluvial_logistic: FluvialLogisticSellinIntegrator = FluvialLogisticSellinIntegrator()  # type: ignore
     sellin = fluvial_logistic.add_contribution_column(sellin)

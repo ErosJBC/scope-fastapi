@@ -37,7 +37,7 @@ def generate_rebate_sheets(
         sellin = rebate.merge_dataframes(sellin, binnacle)
         if application == "TMS":
             sellin['Bonificación'] = pd.to_numeric(sellin['Bonificación'].apply(
-                lambda x: str(x).replace("$", "").replace(",", ".")
+                lambda x: str(x).replace("$", "").replace(",", "")
             ))
         else:
             sellin = rebate.add_pvp_column(sellin)

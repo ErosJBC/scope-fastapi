@@ -29,7 +29,7 @@ def generate_cr_logistic_sheets(
     """
     sellin = data["sales"].copy()
     sellin['Bonificación'] = pd.to_numeric(sellin['Bonificación'].apply(
-        lambda x: str(x).replace("$", "").replace(",", ".")
+        lambda x: str(x).replace("$", "").replace(",", "")
     ))
     cr_logistic: CrLogisticSellinIntegrator = CrLogisticSellinIntegrator()
     sellin = cr_logistic.add_contribution_column(sellin)

@@ -17,7 +17,7 @@ class SellOutIntegrator:
         Constructor of the class.
 
         :param dataframe:
-        :type dataframe: pd.DataFrame
+        :type dataframe: Pd.DataFrame
         """
         self.dataframe: pd.DataFrame = dataframe
 
@@ -38,7 +38,7 @@ class SellOutIntegrator:
             (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &  # type: ignore
             (self.dataframe["YEAR"] == options.year) &  # type: ignore
             (self.dataframe["MONTH"].isin(list_month))
-            ].reset_index(drop=True).copy()
+        ].reset_index(drop=True).copy()
         return filtered_df
 
     @staticmethod
@@ -60,8 +60,8 @@ class SellOutIntegrator:
 
         :param prices: The prices dataframe.
         :type prices: Pd.DataFrame
-        :return: A dataframe with the sellout data merged with the prices data.
-        :rtype: pd.DataFrame
+        :return: A dataframe with the sellout data merged with the price data.
+        :rtype: Pd.DataFrame
         """
         merged_df: pd.DataFrame = self.dataframe.merge(
             prices,
@@ -87,6 +87,9 @@ class SellOutIntegrator:
             on=['COD_ZDES', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO'],
             how='left'
         )
+        print("Merged pivot dataframe")
+        print(merged_pivot_df.head())
+        print(merged_pivot_df.dtypes)
         return merged_pivot_df
 
     @staticmethod
@@ -101,8 +104,9 @@ class SellOutIntegrator:
         :return: The dataframe with contribution column
         :rtype: pd.DataFrame
         """
-        for application in list(columns)[4:]:
+        for application in columns[4:]:
             dataframe[f'APORTE {application}'] = dataframe['PVP'] * dataframe['CTD_SACOS'] * dataframe[application] * (
                 1 if application == 'Bonif. P.Base' else dataframe['Dto. Factura']
             )
+        print(dataframe.head())
         return dataframe

@@ -21,7 +21,7 @@ class SellOutProcess:
         """
         Filters the sellout dataframe based on type.
 
-        :param dataframe: The dataframe containing sellout data.
+        :param dataframe: The dataframe contains sellout data.
         :type dataframe: pd.DataFrame
         :return: A dataframe filtered by type.
         :rtype: pd.DataFrame
@@ -35,10 +35,10 @@ class SellOutProcess:
         """
         Adds columns to the sellout dataframe based on the given settings.
 
-        :param dataframe: The dataframe containing sellout data.
+        :param dataframe: The dataframe contains sellout data.
         :type dataframe: pd.DataFrame
         :return: A dataframe with added columns.
-        :rtype: pd.DataFrame
+        :rtype: Pd.DataFrame
         """
         dataframe['Fecha'] = pd.to_datetime(dataframe['Fecha'])
         dataframe['MONTH'] = dataframe['Fecha'].dt.month
@@ -50,7 +50,7 @@ class SellOutProcess:
         """
         Renames the columns of the sellout dataframe based on the given settings.
 
-        :param dataframe: The dataframe containing sellout data.
+        :param dataframe: The dataframe contains sellout data.
         :type dataframe: pd.DataFrame
         :return: A dataframe with renamed columns.
         :rtype: pd.DataFrame

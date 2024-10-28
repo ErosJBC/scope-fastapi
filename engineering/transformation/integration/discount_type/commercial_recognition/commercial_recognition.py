@@ -35,7 +35,7 @@ def generate_commercial_recognition_sheets(
     commercial_recognition: CommercialRecognitionSellinIntegrator = CommercialRecognitionSellinIntegrator()
     if application == "TMS":
         sellin["Bonificación"] = pd.to_numeric(sellin["Bonificación"].apply(
-            lambda x: str(x).replace("$", "").replace(",", ".")
+            lambda x: str(x).replace("$", "").replace(",", "")
         ))
     else:
         sellin["Bonificación"] = pd.to_numeric(sellin["Bonificación"])

@@ -28,5 +28,4 @@ def preprocess(
     updated_data: dict[str, pd.DataFrame] = cleaned_data.copy()
     reduced_data: dict[str, pd.DataFrame] = integrate(cleaned_data, settings)
     updated_data.update(reduced_data)
-
     return updated_data

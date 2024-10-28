@@ -23,26 +23,26 @@ class PriceProcess:
         """
         Filters the price dataframe based on status sku.
 
-        :param dataframe: The dataframe containing price data.
+        :param dataframe: The dataframe contains price data.
         :type dataframe: pd.DataFrame
         :return: A dataframe filtered by status sku.
         :rtype: pd.DataFrame
         """
-        filtered_df: pd.DataFrame = dataframe.loc[
+        filtered_df: pd.DataFrame = dataframe[
             dataframe["Status SKU"] == self.status_sku
         ].copy()
         return filtered_df
 
     def filter_consider(self, dataframe: pd.DataFrame) -> pd.DataFrame:
         """
-        Filters the price dataframe based on consider.
+        Filters the price dataframe based on considering.
 
         :param dataframe: The dataframe containing price data.
         :type dataframe: pd.DataFrame
         :return: A dataframe filtered by consider.
         :rtype: pd.DataFrame
         """
-        filtered_df: pd.DataFrame = dataframe.loc[
+        filtered_df: pd.DataFrame = dataframe[
             dataframe["Considerar"] == self.consider
         ].copy()
         return filtered_df

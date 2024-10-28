@@ -45,7 +45,7 @@ def save_dataframes_to_excel(
     Save dataframes into an Excel file.
 
     :param data: A dictionary with keys as sheet names and values as dataframes.
-    :type data: dict[str, pd.DataFrame]
+    :type data: Dict[str, pd.DataFrame]
     :param path: The file path where to save the Excel file
     :type path: FilePath
     :return: None
@@ -66,7 +66,7 @@ def save_dataframes_to_parquet(
     Save dataframes into a JSON file.
 
     :param dataframes: A dictionary with keys as sheet names and values as dataframes.
-    :type dataframes: dict[str, pd.DataFrame]
+    :type dataframes: Dict[str, pd.DataFrame]
     :param general_settings: The general settings required to save the dataframes
     :type general_settings: GeneralSettings
     """

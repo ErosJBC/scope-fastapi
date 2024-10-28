@@ -22,7 +22,7 @@ def process_client(
     dataframe: pd.DataFrame, client_settings: ClientSettings
 ) -> pd.DataFrame:
     """
-    Process clients data using the given settings
+    Process clients' data using the given settings
 
     :param dataframe: The raw dataframe to filter
     :type dataframe: pd.DataFrame
@@ -35,6 +35,7 @@ def process_client(
     filtered_client: pd.DataFrame = client_process.filter_countries(dataframe)
     unique_client = filtered_client.drop_duplicates().reset_index(drop=True)
     unique_client['COD_ZDES'] = unique_client['COD_ZDES'].astype(str)
+    unique_client['COD_ZNJE'] = unique_client['COD_ZNJE'].apply(lambda x: str(x))
     return unique_client
 
 def process_binnacle(
@@ -58,6 +59,7 @@ def process_binnacle(
     renamed_binnacle['COD_ZDES'] = renamed_binnacle['COD_ZDES'].astype(str)
     renamed_binnacle['COD_ZDEM'] = renamed_binnacle['COD_ZDEM'].astype(str)
     renamed_binnacle['COD_PRODUCTO'] = renamed_binnacle['COD_PRODUCTO'].astype(str)
+    renamed_binnacle['COD_ZNJE'] = renamed_binnacle['COD_ZNJE'].apply(lambda x: str(x))
     renamed_binnacle['VALOR'] = renamed_binnacle['VALOR'].astype(str)
     return renamed_binnacle
 
@@ -83,6 +85,7 @@ def process_sellout(
     renamed_sellout['FAMILIA'] = renamed_sellout['FAMILIA'].astype(str)
     renamed_sellout['COD_ZDES'] = renamed_sellout['COD_ZDES'].astype(str)
     renamed_sellout['COD_PRODUCTO'] = renamed_sellout['COD_PRODUCTO'].astype(str)
+    renamed_sellout['COD_ZNJE'] = pd.to_numeric(renamed_sellout['COD_ZNJE'], downcast="integer").apply(lambda x: str(x))
     renamed_sellout = renamed_sellout.sort_values(by=['YEAR', 'MONTH'])
     renamed_sellout['YEAR'] = renamed_sellout['YEAR'].astype(str)
     renamed_sellout['MONTH'] = renamed_sellout['MONTH'].astype(str)
@@ -105,8 +108,8 @@ def process_price(
     consider_price: pd.DataFrame = price_process.filter_consider(dataframe)
     status_sku_price: pd.DataFrame = price_process.filter_status_sku(consider_price)
     renamed_price: pd.DataFrame = price_process.rename_columns_dataframe(status_sku_price).reset_index(drop=True)
-    renamed_price['COD_ZNJE'] = renamed_price['COD_ZNJE'].astype(str)
-    renamed_price['COD_PRODUCTO'] = renamed_price['COD_PRODUCTO'].astype(str)
+    renamed_price['COD_ZNJE'] = pd.to_numeric(renamed_price['COD_ZNJE'], downcast="integer").apply(lambda x: str(x))
+    renamed_price['COD_PRODUCTO'] = pd.to_numeric(renamed_price['COD_PRODUCTO'], downcast="integer").apply(lambda x: str(x))
     renamed_price['Dto. Factura'] = renamed_price['Dto. Factura'] / 100
     renamed_price = renamed_price.drop_duplicates(subset=['COD_ZNJE', 'COD_PRODUCTO'], keep='last')
     return renamed_price

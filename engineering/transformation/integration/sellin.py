@@ -22,7 +22,7 @@ class SellinIntegrator(ABC):
         """
         Filters the sellout dataframe based on the selected options.
 
-        :param dataframe: The dataframe containing sellout data.
+        :param dataframe: The dataframe contains sellout data.
         :type dataframe: pd.DataFrame
         :param options: The options selected by the user.
         :type options: Options
@@ -33,10 +33,10 @@ class SellinIntegrator(ABC):
         """
         filtered_df: pd.DataFrame = dataframe[
             (dataframe['DES_ZNJE'] == options.nodo) &
-            (dataframe['YEAR'] == options.year) &
-            (dataframe['MONTH'].isin(months)) &
+            (dataframe['YEAR'] == int(options.year)) &  # type: ignore
+            (dataframe['MONTH'].isin([int(month) for month in months])) &
             (dataframe['CLASE_FACTURA'].isin(['ZF01', 'ZNC7']))
-        ]
+            ]
         return filtered_df
 
     @staticmethod

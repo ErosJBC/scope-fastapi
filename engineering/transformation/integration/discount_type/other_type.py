@@ -17,7 +17,7 @@ from schemas.request.options import Options
 def generate_other_discount_type_sheets(
     data: dict[str, pd.DataFrame],
     options: Options,
-    list_month: list[str]
+    list_month: list[int]
 ) -> dict[str, pd.DataFrame]:
     """
     Generate the sheets for the other discount type
@@ -27,7 +27,7 @@ def generate_other_discount_type_sheets(
     :param options: The selected options for the transformation
     :type options: Options
     :param list_month: The list of months
-    :type list_month: list[str]
+    :type list_month: list[int]
     :return: The sheets for the other discount type
     :rtype: dict[str, pd.DataFrame]
     """
@@ -35,6 +35,7 @@ def generate_other_discount_type_sheets(
     sellin: pd.DataFrame = data["sales"].copy()
     validators_data: pd.DataFrame = BinnacleIntegrator.create_validators_column(binnacle, sellin)
     merged_data: pd.DataFrame = SellinIntegrator.merge_dataframes(sellin, validators_data)
+    merged_data = SellinIntegrator.convert_bonus_column(merged_data)
     data.update({"binnacle": validators_data})
     data.update({"sales": merged_data})
     dict_sheets: dict[str, pd.DataFrame] = {}

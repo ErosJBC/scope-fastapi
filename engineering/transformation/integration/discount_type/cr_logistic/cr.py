@@ -66,4 +66,5 @@ class CrLogisticSellinIntegrator(SellinIntegrator):
         :rtype: pd.DataFrame
         """
         dataframe['APORTE'] = dataframe['TMS'] * dataframe['Bonificación'].astype(float)
+        dataframe['APORTE'] = pd.to_numeric(dataframe['APORTE'])
         return dataframe

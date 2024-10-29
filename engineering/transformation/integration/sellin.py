@@ -18,7 +18,7 @@ class SellinIntegrator(ABC):
         self.sellin: str = ""
 
     @staticmethod
-    def filter_options(dataframe: pd.DataFrame, options: Options, months: list[str]) -> pd.DataFrame:
+    def filter_options(dataframe: pd.DataFrame, options: Options, months: list[int]) -> pd.DataFrame:
         """
         Filters the sellout dataframe based on the selected options.
 
@@ -27,16 +27,16 @@ class SellinIntegrator(ABC):
         :param options: The options selected by the user.
         :type options: Options
         :param months: The list of months to filter the dataframe.
-        :type months: list[str]
+        :type months: list[int]
         :return: A dataframe filtered by the selected options.
         :rtype: pd.DataFrame
         """
         filtered_df: pd.DataFrame = dataframe[
             (dataframe['DES_ZNJE'] == options.nodo) &
             (dataframe['YEAR'] == int(options.year)) &  # type: ignore
-            (dataframe['MONTH'].isin([int(month) for month in months])) &
+            (dataframe['MONTH'].isin(months)) &
             (dataframe['CLASE_FACTURA'].isin(['ZF01', 'ZNC7']))
-            ]
+        ].reset_index(drop=True)
         return filtered_df
 
     @staticmethod
@@ -51,16 +51,27 @@ class SellinIntegrator(ABC):
         :return: A dataframe filtered by options.
         :rtype: pd.DataFrame
         """
-        dataframe['COD_ZDES'] = dataframe['COD_ZDES'].astype(str)
-        dataframe['COD_ZDEM'] = dataframe['COD_ZDEM'].astype(str)
-        binnacle['COD_ZDES'] = binnacle['COD_ZDES'].astype(str)
-        binnacle['COD_ZDEM'] = binnacle['COD_ZDEM'].astype(str)
         merged_df: pd.DataFrame = dataframe.merge(
             binnacle[['COD_ZDES', 'COD_ZDEM', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO', 'VALOR']].drop_duplicates(),
             how="inner"
         )
         merged_df.rename(columns={'VALOR': 'Bonificación'}, inplace=True)
         return merged_df
+
+    @staticmethod
+    def convert_bonus_column(dataframe: pd.DataFrame) -> pd.DataFrame:
+        """
+        Converts the bonus column to numeric
+
+        :param dataframe: The dataframe to convert bonus column
+        :type dataframe: pd.DataFrame
+        :return: The dataframe with bonus column converted
+        :rtype: pd.DataFrame
+        """
+        dataframe['Bonificación'] = pd.to_numeric(dataframe['Bonificación'].apply(
+            lambda x: str(x).replace("$", "").replace(",", "")
+        ))
+        return dataframe
 
     @staticmethod
     def add_pvp_column(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -74,6 +85,7 @@ class SellinIntegrator(ABC):
         """
         dataframe["PVP"] = dataframe["P_BASE"] / dataframe["TMS"]
         dataframe["PVP"] = dataframe.apply(lambda row: row["PVP"] / 40 if row["FAMILIA"] != "Nicovita Origin" else row["PVP"] / 100, axis=1)
+        dataframe["PVP"] = pd.to_numeric(dataframe["PVP"])
         return dataframe
 
     @staticmethod
@@ -87,6 +99,7 @@ class SellinIntegrator(ABC):
         :rtype: pd.DataFrame
         """
         dataframe["Dto. Factura"] = dataframe['D_VOL'] / dataframe['P_BASE']
+        dataframe["Dto. Factura"] = pd.to_numeric(dataframe["Dto. Factura"])
         return dataframe
 
     @abstractmethod

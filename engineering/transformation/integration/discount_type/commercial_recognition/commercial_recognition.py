@@ -8,6 +8,7 @@ from engineering.transformation.integration.binnacle import BinnacleIntegrator
 from engineering.transformation.integration.discount_type.commercial_recognition.commercial import \
     CommercialRecognitionSellinIntegrator
 from engineering.transformation.integration.discount_type.summary import generate_summary_commercial_recognition_sheet
+from engineering.transformation.integration.sellin import SellinIntegrator
 from engineering.transformation.integration.utils.utils import generate_base_months_sheets
 from schemas.request.options import Options
 
@@ -15,7 +16,7 @@ from schemas.request.options import Options
 def generate_commercial_recognition_sheets(
     data: dict[str, pd.DataFrame],
     options: Options,
-    list_month: list[str]
+    list_month: list[int]
 ) -> dict[str, pd.DataFrame]:
     """
     Generate the sheets for the commercial recognition discount type
@@ -25,7 +26,7 @@ def generate_commercial_recognition_sheets(
     :param options: The selected options for the transformation
     :type options: Options
     :param list_month: The list of months
-    :type list_month: list[str]
+    :type list_month: list[int]
     :return: The sheets for the commercial recognition discount type
     :rtype: dict[str, pd.DataFrame]
     """
@@ -34,9 +35,7 @@ def generate_commercial_recognition_sheets(
     application = BinnacleIntegrator.get_type_application(binnacle)
     commercial_recognition: CommercialRecognitionSellinIntegrator = CommercialRecognitionSellinIntegrator()
     if application == "TMS":
-        sellin["Bonificación"] = pd.to_numeric(sellin["Bonificación"].apply(
-            lambda x: str(x).replace("$", "").replace(",", "")
-        ))
+        sellin = SellinIntegrator.convert_bonus_column(sellin)
     else:
         sellin["Bonificación"] = pd.to_numeric(sellin["Bonificación"])
         sellin = commercial_recognition.add_pvp_column(sellin)

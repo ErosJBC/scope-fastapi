@@ -36,6 +36,8 @@ def process_client(
     unique_client = filtered_client.drop_duplicates().reset_index(drop=True)
     unique_client['COD_ZDES'] = unique_client['COD_ZDES'].astype(str)
     unique_client['COD_ZNJE'] = unique_client['COD_ZNJE'].apply(lambda x: str(x))
+    unique_client['COD_ZDEM'] = unique_client['COD_ZDEM'].apply(lambda x: str(x))
+    unique_client['COD_ZENT'] = unique_client['COD_ZENT'].apply(lambda x: str(x))
     return unique_client
 
 def process_binnacle(
@@ -59,7 +61,7 @@ def process_binnacle(
     renamed_binnacle['COD_ZDES'] = renamed_binnacle['COD_ZDES'].astype(str)
     renamed_binnacle['COD_ZDEM'] = renamed_binnacle['COD_ZDEM'].astype(str)
     renamed_binnacle['COD_PRODUCTO'] = renamed_binnacle['COD_PRODUCTO'].astype(str)
-    renamed_binnacle['COD_ZNJE'] = renamed_binnacle['COD_ZNJE'].apply(lambda x: str(x))
+    renamed_binnacle['COD_ZNJE'] = renamed_binnacle['COD_ZNJE'].astype(str)
     renamed_binnacle['VALOR'] = renamed_binnacle['VALOR'].astype(str)
     return renamed_binnacle
 
@@ -131,4 +133,7 @@ def process_sale(
     renamed_sale['FAMILIA'] = renamed_sale['FAMILIA'].astype(str)
     renamed_sale['COD_ZDES'] = renamed_sale['COD_ZDES'].astype(str)
     renamed_sale['COD_PRODUCTO'] = renamed_sale['COD_PRODUCTO'].astype(str)
+    renamed_sale['COD_ZDEM'] = renamed_sale['COD_ZDEM'].astype(str)
+    renamed_sale['COD_ZENT'] = renamed_sale['COD_ZENT'].astype(str)
+
     return renamed_sale

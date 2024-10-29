@@ -23,7 +23,7 @@ class SellOutIntegrator:
         """
         self.dataframe: pd.DataFrame = dataframe
 
-    def filter_options(self, binnacle: pd.DataFrame, options: Options, list_month: list[str]) -> pd.DataFrame:
+    def filter_options(self, binnacle: pd.DataFrame, options: Options, list_month: list[int]) -> pd.DataFrame:
         """
         Filters the sellout dataframe based on the selected options.
 
@@ -32,14 +32,14 @@ class SellOutIntegrator:
         :param options: The options selected by the user.
         :type options: Dict[str, str]
         :param list_month: The list of months.
-        :type list_month: List[str]
+        :type list_month: List[int]
         :return: A dataframe filtered by the selected options.
         :rtype: pd.DataFrame
         """
         filtered_df = self.dataframe[
             (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &  # type: ignore
             (self.dataframe["YEAR"] == int(options.year)) &  # type: ignore
-            (self.dataframe["MONTH"].isin([int(month) for month in list_month]))
+            (self.dataframe["MONTH"].isin(list_month))
         ].reset_index(drop=True).copy()
         return filtered_df
 
@@ -53,7 +53,7 @@ class SellOutIntegrator:
         :return: The dataframe with the family column formatted.
         :rtype: pd.DataFrame
         """
-        dataframe['FAMILIA'] = dataframe['FAMILIA'].str.split(' ').str[1].str[:3].str.upper()
+        dataframe['FAMILIA'] = dataframe['FAMILIA'].apply(lambda family: family.split(' ')[1][:3].upper())
         return dataframe
 
     def merge_with_prices_dataframe(self, prices: pd.DataFrame) -> pd.DataFrame:

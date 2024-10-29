@@ -13,7 +13,7 @@ from schemas.request.options import Options
 def generate_cr_logistic_sheets(
     data: dict[str, pd.DataFrame],
     options: Options,
-    list_month: list[str]
+    list_month: list[int]
 ) -> dict[str, pd.DataFrame]:
     """
     Generate the sheets for the cr logistic discount type
@@ -23,14 +23,11 @@ def generate_cr_logistic_sheets(
     :param options: The selected options for the transformation
     :type options: Options
     :param list_month: The list of months
-    :type list_month: list[str]
+    :type list_month: list[int]
     :return: The sheets for the cr logistic discount type
     :rtype: dict[str, pd.DataFrame]
     """
     sellin = data["sales"].copy()
-    sellin['Bonificación'] = pd.to_numeric(sellin['Bonificación'].apply(
-        lambda x: str(x).replace("$", "").replace(",", "")
-    ))
     cr_logistic: CrLogisticSellinIntegrator = CrLogisticSellinIntegrator()
     sellin = cr_logistic.add_contribution_column(sellin)
     sellin = cr_logistic.filter_ref_order(sellin)

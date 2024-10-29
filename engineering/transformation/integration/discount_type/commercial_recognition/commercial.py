@@ -36,6 +36,7 @@ class CommercialRecognitionSellinIntegrator(SellinIntegrator):
             dataframe['P. Crédito'] = trunc_number(
                 dataframe['PVP'] * (1 + dataframe['Dto. Factura']), 3
             )
+        dataframe['P. Crédito'] = pd.to_numeric(dataframe['P. Crédito'])
         return dataframe
 
     def add_additional_discount_column(self, dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -50,6 +51,7 @@ class CommercialRecognitionSellinIntegrator(SellinIntegrator):
         dataframe['Dto. Adicional'] = round(
             (dataframe['P_BASE'] - dataframe['VALOR_NETO'] + dataframe['D_VOL']) / dataframe['P_BASE'], 5
         )
+        dataframe['Dto. Adicional'] = pd.to_numeric(dataframe['Dto. Adicional'])
         return dataframe
 
     def add_contribution_column(self, dataframe: pd.DataFrame, type_application: str = "TMS") -> pd.DataFrame:
@@ -75,4 +77,5 @@ class CommercialRecognitionSellinIntegrator(SellinIntegrator):
                 dataframe['P. Crédito'] * (1 + dataframe['Dto. Adicional']) *
                 dataframe['Bonificación'] * dataframe['CTD_SACOS']
             )
+        dataframe['APORTE'] = pd.to_numeric(dataframe['APORTE'])
         return dataframe

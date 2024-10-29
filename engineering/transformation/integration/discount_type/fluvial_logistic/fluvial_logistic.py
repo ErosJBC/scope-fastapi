@@ -13,7 +13,7 @@ from schemas.request.options import Options
 def generate_fluvial_logistic_sheets(
     data: dict[str, pd.DataFrame],
     options: Options,
-    list_month: list[str]
+    list_month: list[int]
 ) -> dict[str, pd.DataFrame]:
     """
     Generate the sheets for the fluvial logistic discount type
@@ -23,15 +23,12 @@ def generate_fluvial_logistic_sheets(
     :param options: The selected options for the transformation
     :type options: Options
     :param list_month: The list of months
-    :type list_month: list[str]
+    :type list_month: list[int]
     :return: The sheets for the fluvial logistic discount type
     :rtype: dict[str, pd.DataFrame]
     """
     sellin = data["sales"].copy()
-    sellin['Bonificación'] = pd.to_numeric(sellin['Bonificación'].apply(
-        lambda x: str(x).replace("$", "").replace(",", "")
-    ))
-    fluvial_logistic: FluvialLogisticSellinIntegrator = FluvialLogisticSellinIntegrator()  # type: ignore
+    fluvial_logistic: FluvialLogisticSellinIntegrator = FluvialLogisticSellinIntegrator()
     sellin = fluvial_logistic.add_contribution_column(sellin)
     base_sheets: dict[str, pd.DataFrame] = generate_base_months_sheets(sellin, options, list_month)
     summary_sheet: dict[str, pd.DataFrame] = generate_summary_cr_fluvial_logistic_sheet(sellin)

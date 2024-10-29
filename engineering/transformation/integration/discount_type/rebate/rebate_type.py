@@ -10,7 +10,7 @@ from schemas.request.options import Options
 def generate_rebate_sheets(
     data: dict[str, pd.DataFrame],
     options: Options,
-    list_month: list[str]
+    list_month: list[int]
 ) -> dict[str, pd.DataFrame]:
     """
     Generate the sheets for the rebate report
@@ -20,7 +20,7 @@ def generate_rebate_sheets(
     :param options: The options selected by the user
     :type options: dict[str, Any]
     :param list_month: The list of months to generate the sheets
-    :type list_month: list[str]
+    :type list_month: list[int]
     :return: The sheets for the rebate report
     :rtype: dict[str, pd.DataFrame]
     """

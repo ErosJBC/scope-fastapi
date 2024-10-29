@@ -122,7 +122,7 @@ class BinnacleIntegrator:
         return type_application
 
     @staticmethod
-    def get_list_month_by_period(dataframe: pd.DataFrame, selected_month: str) -> list[str]:
+    def get_list_month_by_period(dataframe: pd.DataFrame, selected_month: str) -> list[int]:
         """
         Get the list of months based on the period of the filtered binnacle
 
@@ -136,8 +136,7 @@ class BinnacleIntegrator:
         period = dataframe['PERIODO'].unique().tolist()[0]
         period_dict: dict[str, PositiveInt] = {'Mensual': 1, 'Bimensual': 2, 'Trimestral': 3}
 
-        list_month_temp: list[int] = list(range(1, int(selected_month) + 1))[-period_dict[period]:]
-        list_month = [str(month) for month in list_month_temp]
+        list_month: list[int] = list(range(1, int(selected_month) + 1))[-period_dict[period]:]
         return list_month
 
     @staticmethod
@@ -158,15 +157,15 @@ class BinnacleIntegrator:
         :return: The dataframe with the validators
         :rtype: pd.DataFrame
         """
-        validators: list[str] = ['COD_ZDES', 'COD_ZDEM', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO']
-        if is_sellout: validators.remove('COD_ZDEM')
+        list_validators: list[str] = ['COD_ZDES', 'COD_ZDEM', 'ETAPA', 'FAMILIA', 'COD_PRODUCTO']
+        if is_sellout: list_validators.remove('COD_ZDEM')
         validators_df: pd.DataFrame = binnacle.copy()
-        for index, column in enumerate(validators):
+        for index, column in enumerate(list_validators):
             expanded = []
             for _, row in validators_df.iterrows():
                 if row[column] == 'Todo':
-                    posibles = sellin_sellout
-                    for val_col in validators[:index]:
+                    posibles = sellin_sellout.copy()
+                    for val_col in list_validators[:index]:
                         posibles = posibles[posibles[val_col] == row[val_col]]
                     posibles = posibles[column].unique()
                     if len(posibles) > 0:

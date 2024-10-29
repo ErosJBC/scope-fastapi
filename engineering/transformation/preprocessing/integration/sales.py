@@ -32,8 +32,9 @@ class SaleAssembler:
         merged_sales = dataframe.merge(clients[self.filter_columns], on=self.merge_columns, how='left')
         return merged_sales
 
+    @staticmethod
     def filter_sales(
-        self, dataframe: pd.DataFrame, binnacle: pd.DataFrame
+        dataframe: pd.DataFrame, binnacle: pd.DataFrame
     ) -> pd.DataFrame:
         """
         Integrates sales data with binnacle data

@@ -5,12 +5,10 @@ A module for persistence manager in the core package.
 from typing import Any, Type
 
 import pandas as pd
-from black import path_empty
 from pandas.errors import EmptyDataError, ParserError
 from pydantic import BaseModel, FilePath
 
 from config.base_settings import BaseDataSettings
-from schemas.validator import validate_dataframe
 
 
 def load_file(
@@ -44,7 +42,6 @@ def load_file(
             *args,
             **kwargs,
         )
-        # validate_dataframe(dataframe, model)
         return dataframe
     except FileNotFoundError as e:
         raise FileNotFoundError(f"File not found: {settings.FILENAME}. Error: {e}")

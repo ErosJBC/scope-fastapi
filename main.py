@@ -6,9 +6,6 @@ import logging
 
 import uvicorn
 
-from config.settings import settings
-from engineering.engineering import run_load_data
-
 logger: logging.Logger = logging.getLogger(__name__)
 
 
@@ -19,12 +16,7 @@ def main() -> None:
     :return: None
     :rtype: NoneType
     """
-    logger.info("Starting the data loading process.")
-    try:
-        run_load_data(settings)
-        logger.info("Data loaded successfully")
-    except Exception as e:
-        logger.error(f"An error occurred: {e}")
+    logger.info("Starting the project")
 
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
 

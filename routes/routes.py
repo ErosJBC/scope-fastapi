@@ -3,11 +3,12 @@ This module contains the routes for the FastAPI application.
 """
 
 from fastapi import FastAPI
-from fastapi.responses import JSONResponse
 
 from routes.app import initRouter
 from routes.filter import filterRouter
 from routes.generate import generateRouter
+from routes.load import loadRouter
+from routes.process import processRouter
 
 
 def load_routes(init_app: FastAPI) -> None:
@@ -20,6 +21,8 @@ def load_routes(init_app: FastAPI) -> None:
     :rtype: NoneType
     """
     init_app.include_router(initRouter)
+    init_app.include_router(loadRouter)
+    init_app.include_router(processRouter)
     init_app.include_router(filterRouter)
     init_app.include_router(generateRouter)
 

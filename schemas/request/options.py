@@ -1,5 +1,5 @@
 """
-This module contains the schema for the options request.
+This module contains the schema for the option request.
 """
 
 from pydantic import BaseModel, Field

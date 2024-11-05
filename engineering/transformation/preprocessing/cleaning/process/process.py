@@ -85,7 +85,7 @@ def process_sellout(
     renamed_sellout['ETAPA'] = renamed_sellout['ETAPA'].str.capitalize()
     renamed_sellout['NUM_FACTURA'] = renamed_sellout['NUM_FACTURA'].astype(str)
     renamed_sellout['FAMILIA'] = renamed_sellout['FAMILIA'].astype(str)
-    renamed_sellout['COD_ZDES'] = renamed_sellout['COD_ZDES'].astype(str)
+    renamed_sellout['COD_ZDES'] = pd.to_numeric(renamed_sellout['COD_ZDES'], downcast="integer").apply(lambda x: str(x).split('.')[0])
     renamed_sellout['COD_PRODUCTO'] = renamed_sellout['COD_PRODUCTO'].astype(str)
     renamed_sellout['COD_ZNJE'] = pd.to_numeric(renamed_sellout['COD_ZNJE'], downcast="integer").apply(lambda x: str(x))
     renamed_sellout = renamed_sellout.sort_values(by=['YEAR', 'MONTH'])

@@ -2,6 +2,7 @@
 This module contains the utilities for filtering and generating the data based on the options provided.
 """
 
+from fastapi import UploadFile
 import pandas as pd
 from typing import Any
 
@@ -68,3 +69,16 @@ def generate_excel_file(options: Options) -> dict[str, str]:
     dict_dataframes: dict[str, pd.DataFrame] = read_to_parquet(settings)
     file_name, file_base64 = run_process_data(dict_dataframes, settings, options)
     return { "file_name": file_name, "file_base64": file_base64 }
+
+def load_excel_files(files: list[UploadFile]) -> None:
+    """
+    Save the Excel files to the raw path.
+
+    :param files: The files to be saved
+    :type files: list[UploadFile]
+    :return: None
+    :rtype: NoneType
+    """
+    for file in files:
+        with open(f"{settings.general.RAW_PATH}/{file.filename}", "wb") as f:
+            f.write(file.file.read())

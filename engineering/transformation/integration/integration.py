@@ -58,7 +58,7 @@ def integrate_sellout(
     list_month: list[int] = BinnacleIntegrator.get_list_month_by_period(binnacle_data, options.month)  # type: ignore
     sellout_integrator: SellOutIntegrator = SellOutIntegrator(sellout_data)
     filtered_sellout = sellout_integrator.filter_options(binnacle_data, options, list_month)
-    filtered_sellout["COD_ZDES"] = pd.to_numeric(filtered_sellout["COD_ZDES"], downcast="integer").apply(lambda x: str(x))
+    # filtered_sellout["COD_ZDES"] = pd.to_numeric(filtered_sellout["COD_ZDES"], downcast="integer").apply(lambda x: str(x))
     data.update({"sellout": filtered_sellout})
 
     sheets = generate_sellout_sheets(data, options)

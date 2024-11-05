@@ -43,7 +43,7 @@ class BasePathSettings(BaseSettings):
             if info.field_name == "FILENAME":
                 return (raw_path / v).resolve()
             elif info.field_name == "PARQUET_FILENAME":
-                parquet_dir: DirectoryPath = "parquet"
+                parquet_dir: str = "parquet"
                 return (raw_path / parquet_dir / v).resolve()
         return v
 
@@ -54,7 +54,7 @@ class BaseDataSettings(BasePathSettings):
     and columns.
     """
 
-    FILENAME: FilePath
+    FILENAME: NewPath | FilePath
     PARQUET_FILENAME: NewPath | FilePath
     SHEET: str
     COLUMNS: list[str]

@@ -12,12 +12,12 @@ class SellOutIntegrator:
     A class to assemble the sellout dataframe
     """
 
-    def __init__(self, dataframe) -> None:
+    def __init__(self, dataframe: pd.DataFrame) -> None:
         """
         Constructor of the class.
 
         :param dataframe:
-        :type dataframe: Pd.DataFrame
+        :type dataframe: pd.DataFrame
         :return: None
         :rtype: NoneType
         """
@@ -28,17 +28,17 @@ class SellOutIntegrator:
         Filters the sellout dataframe based on the selected options.
 
         :param binnacle: The binnacle dataframe.
-        :type binnacle: Pd.DataFrame
+        :type binnacle: pd.DataFrame
         :param options: The options selected by the user.
-        :type options: Dict[str, str]
+        :type options: Options
         :param list_month: The list of months.
         :type list_month: List[int]
         :return: A dataframe filtered by the selected options.
         :rtype: pd.DataFrame
         """
         filtered_df = self.dataframe[
-            (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &  # type: ignore
-            (self.dataframe["YEAR"] == int(options.year)) &  # type: ignore
+            (self.dataframe["COD_ZNJE"] == binnacle[binnacle["DES_ZNJE"] == options.nodo]["COD_ZNJE"].unique().tolist()[0]) &
+            (self.dataframe["YEAR"] == int(options.year)) &
             (self.dataframe["MONTH"].isin(list_month))
         ].reset_index(drop=True).copy()
         return filtered_df
@@ -49,7 +49,7 @@ class SellOutIntegrator:
         Formats the family column in the dataframe.
 
         :param dataframe: The dataframe to format the family column.
-        :type dataframe: Pd.DataFrame
+        :type dataframe: pd.DataFrame
         :return: The dataframe with the family column formatted.
         :rtype: pd.DataFrame
         """
@@ -61,9 +61,9 @@ class SellOutIntegrator:
         Merges the sellout dataframe with the prices dataframe.
 
         :param prices: The prices dataframe.
-        :type prices: Pd.DataFrame
+        :type prices: pd.DataFrame
         :return: A dataframe with the sellout data merged with the price data.
-        :rtype: Pd.DataFrame
+        :rtype: pd.DataFrame
         """
         merged_df: pd.DataFrame = self.dataframe.merge(
             prices,
